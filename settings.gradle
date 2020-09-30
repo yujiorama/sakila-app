@@ -1,0 +1,5 @@
+rootProject.name = "sakila-app"
+
+include "sakila-app-web"
+include "sakila-app-batch"
+include "sakila-app-domain"
