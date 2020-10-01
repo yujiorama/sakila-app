@@ -11,6 +11,7 @@
 
 ## sakila-app-web
 
+* [x] テスト用の flyway マイグレーションスクリプトを整備する
 * [ ] `Country` エンティティの CRUD 操作が成功する
 * [ ] 他のエンティティの CRUD 操作が成功する
 * [ ] actuator を構成する
