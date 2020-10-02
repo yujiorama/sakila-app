@@ -16,14 +16,11 @@ import org.testcontainers.containers.PostgreSQLContainerProvider
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
-        initializers = [
-            CountryRepositoryTest.TestDatabaseInitializer::class
-        ])
-class CountryRepositoryTest(
-        @Autowired
-        val restTemplate: TestRestTemplate
+        initializers = [CountryControllerIntegrationTest.TestDatabaseInitializer::class]
+)
+class CountryControllerIntegrationTest(
+        @Autowired private val restTemplate: TestRestTemplate
 ) {
-
     class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
         override fun initialize(applicationContext: ConfigurableApplicationContext) {
 
@@ -54,9 +51,10 @@ class CountryRepositoryTest(
         println(">> teardown")
     }
 
+
     @Test
     fun `test for test`() {
-        val entities = restTemplate.getForEntity<Country>("/countries")
+        val entities = restTemplate.getForEntity<List<Country>>("/countries")
         assert(entities.statusCode.is2xxSuccessful)
     }
 }
