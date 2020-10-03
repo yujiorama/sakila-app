@@ -1,16 +1,14 @@
 package org.bitbucket.yujiorama.sakilaapp
 
-import org.bitbucket.yujiorama.sakilaapp.model.RepositoryConfiguration
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.sql.DataSource
+import java.time.format.DateTimeFormatter
 
 @SpringBootApplication
-@Import(RepositoryConfiguration::class)
 class SakilaAppApplication
 
 fun main(args: Array<String>) {
@@ -18,4 +16,12 @@ fun main(args: Array<String>) {
 }
 
 @Bean
-fun namedParameterJdbcOperations(dataSource: DataSource): NamedParameterJdbcOperations = NamedParameterJdbcTemplate(dataSource)
+fun jacksonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
+
+    return Jackson2ObjectMapperBuilderCustomizer { builder ->
+        run {
+            builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ISO_DATE_TIME))
+            builder.deserializers(LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME))
+        }
+    }
+}

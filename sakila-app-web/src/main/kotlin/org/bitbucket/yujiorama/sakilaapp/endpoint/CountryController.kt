@@ -5,25 +5,43 @@ import org.bitbucket.yujiorama.sakilaapp.model.CountryRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class CountryController(
-        @Autowired private val countryRepository: CountryRepository
+        @Autowired private val repository: CountryRepository
 ) {
 
     @GetMapping("/countries/{id}")
-    fun get(@PathVariable id: Number): ResponseEntity<Country> {
+    fun read(@PathVariable id: Number): ResponseEntity<Country> {
 
-        return countryRepository.findById(id.toInt()).map {
+        return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
     @GetMapping("/countries")
-    fun findAll(): List<Country> = countryRepository.findAll().iterator().asSequence().toList()
+    fun readAll(): List<Country> = repository.findAllByOrderByCountryAsc()
+
+    @PostMapping("/countries")
+    fun create(@RequestBody aCountry: Country): Country = repository.save(aCountry)
+
+    @PutMapping("/countries/{id}")
+    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Country> {
+
+        return repository.findById(id.toInt()).map {
+            val newCountry = Country(id.toInt(), aCountry.country, aCountry.lastUpdate)
+            ResponseEntity.ok(repository.save(newCountry))
+        }.orElse(ResponseEntity.notFound().build())
+    }
+
+    @DeleteMapping("/countries/{id}")
+    fun delete(@PathVariable id: Number): ResponseEntity<Void> {
+
+        return repository.findById(id.toInt()).map {
+            repository.delete(it)
+            ResponseEntity.noContent().build<Void>()
+        }.orElse(ResponseEntity.notFound().build())
+    }
 }

@@ -38,9 +38,37 @@ subprojects {
         mavenCentral()
     }
 
+    sourceSets {
+        integrationTest {
+            compileClasspath += sourceSets.main.output + sourceSets.test.output
+            runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+
+            java {
+                srcDir file('src/test/java')
+            }
+
+            kotlin {
+                srcDir file('src/test/kotlin')
+            }
+
+            //noinspection GroovyAssignabilityCheck
+            resources {
+                srcDir file('src/test/resources')
+            }
+        }
+    }
+
     configurations {
         compileOnly {
             extendsFrom annotationProcessor
+        }
+
+        integrationTestImplementation {
+            extendsFrom testImplementation
+        }
+
+        integrationTestRuntimeOnly {
+            extendsFrom testRuntimeOnly
         }
     }
 
@@ -50,11 +78,10 @@ subprojects {
         annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
         compileOnly('org.projectlombok:lombok')
         annotationProcessor('org.projectlombok:lombok')
-        runtimeOnly('org.postgresql:postgresql')
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        testImplementation("com.h2database:h2")
+        testImplementation('com.h2database:h2')
         testImplementation('org.testcontainers:junit-jupiter')
         testImplementation('org.testcontainers:postgresql')
     }
@@ -82,6 +109,10 @@ subprojects {
     }
 
     test {
+        filter {
+            excludeTestsMatching '*IntegrationTest'
+        }
+
         useJUnitPlatform()
         systemProperty 'spring.profiles.active', 'test'
         testLogging {
@@ -96,4 +127,36 @@ subprojects {
             showStackTraces true
         }
     }
+
+    task integrationTest(type: Test) {
+        group = 'verification'
+
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
+
+        filter {
+            includeTestsMatching '*IntegrationTest'
+        }
+
+        useJUnitPlatform()
+        systemProperty 'spring.profiles.active', 'it'
+        environment = System.getenv() + [
+            'DOCKER_HOST'      : env.fetch('DOCKER_HOST', 'unix:///var/run/docker.sock'),
+            'DOCKER_TLS_VERIFY': env.fetch('DOCKER_TLS_VERIFY', ''),
+            'DOCKER_CERT_PATH' : env.fetch('DOCKER_CERT_PATH', ''),
+        ]
+        testLogging {
+            events 'failed',
+                'passed',
+                'skipped',
+                'standard_error',
+                'standard_out'
+            exceptionFormat 'full'
+            showCauses true
+            showExceptions true
+            showStackTraces true
+        }
+    }
+
+    check.dependsOn integrationTest
 }

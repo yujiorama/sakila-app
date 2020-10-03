@@ -8,8 +8,8 @@ data class Country(
         @Id
         @Column("country_id")
         val id: Int?,
-        val country: String,
-        val lastUpdate: LocalDateTime
+        val country: String = "",
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 ) {
         constructor(country: String, lastUpdate: LocalDateTime) : this(null, country, lastUpdate)
 }
