@@ -1,7 +1,6 @@
 package org.bitbucket.yujiorama.sakilaapp.model
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.MappedCollection
 import java.time.LocalDateTime
@@ -9,20 +8,15 @@ import java.time.LocalDateTime
 data class Address(
         @Id
         @Column("address_id")
-        val id: Long = -1,
-        @Column("address")
-        val address: String = "",
-        @Column("address2")
-        val address2: String? = null,
-        @Column("district")
-        val district: String = "",
+        val id: Long?,
+        val address: String,
+        val address2: String?,
+        val district: String,
         @MappedCollection(idColumn = "city_id")
-        val city: City? = null,
-        @Column("postal_code")
-        val postalCode: String? = null,
-        @Column("phone")
-        val phone: String = "",
-        @LastModifiedDate
-        @Column("last_update")
-        val lastUpdate: LocalDateTime? = null
-)
+        val city: City,
+        val postalCode: String?,
+        val phone: String,
+        val lastUpdate: LocalDateTime
+) {
+        constructor(address: String, district: String, city: City, phone: String, lastUpdate: LocalDateTime) : this(null, address, null, district, city, null, phone, lastUpdate)
+}

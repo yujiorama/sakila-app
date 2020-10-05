@@ -5,14 +5,11 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.MappedCollection
 import java.time.LocalDateTime
 
-data class City(
+data class FilmCategory(
         @Id
-        @Column("city_id")
+        @Column("film_id")
         val id: Int?,
-        val city: String,
-        @MappedCollection(idColumn = "country_id")
-        val country: Country,
+        @MappedCollection(idColumn = "category_id")
+        val category: Category,
         val lastUpdate: LocalDateTime
-) {
-        constructor(city: String, country: Country, lastUpdate: LocalDateTime) : this(null, city, country, lastUpdate)
-}
+)
