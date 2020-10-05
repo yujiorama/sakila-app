@@ -11,5 +11,5 @@ data class Country(
         val country: String = "",
         val lastUpdate: LocalDateTime = LocalDateTime.now()
 ) {
-        constructor(country: String, lastUpdate: LocalDateTime) : this(null, country, lastUpdate)
+    constructor(country: String, lastUpdate: LocalDateTime) : this(null, country, lastUpdate)
 }
