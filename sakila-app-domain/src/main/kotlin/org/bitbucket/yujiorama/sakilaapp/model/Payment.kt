@@ -17,5 +17,5 @@ data class Payment(
         @MappedCollection(idColumn = "rental_id")
         val rental: Rental,
         val amount: BigDecimal,
-        val paymentDate: LocalDateTime
+        val paymentDate: LocalDateTime = LocalDateTime.now()
 )
