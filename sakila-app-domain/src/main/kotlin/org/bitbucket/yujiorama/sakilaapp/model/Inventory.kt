@@ -13,5 +13,5 @@ data class Inventory(
         val film: Film,
         @MappedCollection(idColumn = "store_id")
         val store: Store,
-        val lastUpdate: LocalDateTime
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 )

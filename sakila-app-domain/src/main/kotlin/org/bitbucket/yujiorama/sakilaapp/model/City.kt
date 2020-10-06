@@ -12,7 +12,5 @@ data class City(
         val city: String,
         @MappedCollection(idColumn = "country_id")
         val country: Country,
-        val lastUpdate: LocalDateTime
-) {
-        constructor(city: String, country: Country, lastUpdate: LocalDateTime) : this(null, city, country, lastUpdate)
-}
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
+)

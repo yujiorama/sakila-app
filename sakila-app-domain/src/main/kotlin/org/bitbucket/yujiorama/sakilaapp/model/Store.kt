@@ -13,5 +13,5 @@ data class Store(
         val manager: Staff,
         @MappedCollection(idColumn = "address_id")
         val address: Address,
-        val lastUpdate: LocalDateTime
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 )

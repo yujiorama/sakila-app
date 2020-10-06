@@ -9,5 +9,7 @@ data class Language(
         @Column("language_id")
         val id: Int?,
         val name: String,
-        val lastUpdate: LocalDateTime
-)
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
+) {
+        constructor(name: String) : this(null, name)
+}

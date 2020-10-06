@@ -10,7 +10,5 @@ data class Actor(
         val id: Long?,
         val firstName: String,
         val lastName: String,
-        val lastUpdate: LocalDateTime
-) {
-        constructor(firstName: String, lastName: String, lastUpdate: LocalDateTime) : this(null, firstName, lastName, lastUpdate)
-}
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
+)

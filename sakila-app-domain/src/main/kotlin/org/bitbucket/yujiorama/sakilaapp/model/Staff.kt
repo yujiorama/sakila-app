@@ -19,6 +19,6 @@ data class Staff(
         val active: Boolean = true,
         val userName: String,
         val password: String?,
-        val lastUpdate: LocalDateTime,
+        val lastUpdate: LocalDateTime = LocalDateTime.now(),
         val picture: ByteArray?
 )

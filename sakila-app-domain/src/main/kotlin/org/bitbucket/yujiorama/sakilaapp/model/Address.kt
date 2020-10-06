@@ -16,7 +16,7 @@ data class Address(
         val city: City,
         val postalCode: String?,
         val phone: String,
-        val lastUpdate: LocalDateTime
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 ) {
-        constructor(address: String, district: String, city: City, phone: String, lastUpdate: LocalDateTime) : this(null, address, null, district, city, null, phone, lastUpdate)
+        constructor(address: String, district: String, city: City, phone: String) : this(null, address, null, district, city, null, phone)
 }

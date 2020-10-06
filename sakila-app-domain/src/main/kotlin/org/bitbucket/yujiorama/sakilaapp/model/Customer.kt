@@ -18,8 +18,6 @@ data class Customer(
         val address: Address,
         val activebool: Boolean = true,
         val createDate: LocalDateTime,
-        val lastUpdate: LocalDateTime,
+        val lastUpdate: LocalDateTime = LocalDateTime.now(),
         val active: Int?
-) {
-    constructor(store: Store, firstName: String, lastName: String, address: Address) : this(null, store, firstName, lastName, null, address, true, LocalDateTime.now(), LocalDateTime.now(), null)
-}
+)

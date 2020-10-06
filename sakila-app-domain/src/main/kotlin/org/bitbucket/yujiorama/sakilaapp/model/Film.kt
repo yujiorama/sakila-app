@@ -22,7 +22,7 @@ data class Film(
         val length: Int?,
         val replacementCost: BigDecimal = BigDecimal("19.99"),
         val rating: Rating? = Rating.G,
-        val lastUpdate: LocalDateTime,
+        val lastUpdate: LocalDateTime = LocalDateTime.now(),
         val specialFeatures: Array<String>,
         val fulltext: String
 )

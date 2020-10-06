@@ -11,5 +11,5 @@ data class FilmActor(
         val id: Int?,
         @MappedCollection(idColumn = "film_id")
         val film: Film,
-        val lastUpdate: LocalDateTime
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 )

@@ -17,5 +17,5 @@ data class Rental(
         val returnDate: LocalDateTime?,
         @MappedCollection(idColumn = "staff_id")
         val staff: Staff,
-        val lastUpdate: LocalDateTime
+        val lastUpdate: LocalDateTime = LocalDateTime.now()
 )
