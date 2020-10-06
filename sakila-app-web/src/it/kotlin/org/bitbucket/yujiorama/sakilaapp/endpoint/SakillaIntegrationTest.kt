@@ -1,7 +1,10 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.bitbucket.yujiorama.sakilaapp.model.*
+import org.bitbucket.yujiorama.sakilaapp.model.Actor
+import org.bitbucket.yujiorama.sakilaapp.model.Category
+import org.bitbucket.yujiorama.sakilaapp.model.Country
+import org.bitbucket.yujiorama.sakilaapp.model.Language
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -105,7 +108,7 @@ class SakillaIntegrationTest(
                 headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
                 HttpEntity(it, headers)
             }
-            restTemplate.put("/categories/$category.id", request)
+            restTemplate.put("/categories/${category?.id}", request)
         } catch (e: Exception) {
             Assertions.fail<Void>(e.message)
         }
@@ -125,8 +128,7 @@ class SakillaIntegrationTest(
             Assertions.fail<Void>(e.message)
         }
 
-        val res = restTemplate.getForEntity<Staff>("/staffs/2")
-        Assertions.assertTrue(res.statusCode.is4xxClientError)
+        val res = restTemplate.getForEntity<String>("/staffs/2")
         Assertions.assertEquals(HttpStatus.valueOf(res.statusCodeValue), HttpStatus.NOT_FOUND)
     }
 }
