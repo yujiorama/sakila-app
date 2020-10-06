@@ -103,10 +103,7 @@ class CountryControllerTest(
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"country\":\"bbb\", \"lastUpdate\":\"2020-01-02T03:45:06+09:00\"}"))
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.id").value(1374))
-                .andExpect(jsonPath("$.country").value("bbb"))
-                .andExpect(jsonPath("$.lastUpdate").value(lastUpdate.toString()))
+                .andExpect(status().is2xxSuccessful)
     }
 
 

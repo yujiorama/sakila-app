@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -28,11 +29,12 @@ class CountryController(
     fun create(@RequestBody aCountry: Country): Country = repository.save(aCountry)
 
     @PutMapping("/countries/{id}")
-    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Country> {
+    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {
-            val newCountry = Country(id.toInt(), aCountry.country, aCountry.lastUpdate)
-            ResponseEntity.ok(repository.save(newCountry))
+            val newCountry = aCountry.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
+            repository.save(newCountry)
+            ResponseEntity.accepted().build<Void>()
         }.orElse(ResponseEntity.notFound().build())
     }
 
