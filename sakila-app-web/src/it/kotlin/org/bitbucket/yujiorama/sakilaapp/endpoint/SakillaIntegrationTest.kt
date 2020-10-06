@@ -85,7 +85,7 @@ class SakillaIntegrationTest(
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val language = res.body
         Assertions.assertNotNull(language?.id)
-        Assertions.assertEquals("spanish", language?.name)
+        Assertions.assertEquals("spanish", language?.name?.toLowerCase())
     }
 
     @Test
