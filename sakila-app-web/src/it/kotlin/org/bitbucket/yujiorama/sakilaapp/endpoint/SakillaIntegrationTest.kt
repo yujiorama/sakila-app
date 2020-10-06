@@ -1,5 +1,6 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.bitbucket.yujiorama.sakilaapp.model.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
@@ -12,8 +13,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.getForEntity
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.util.LinkedMultiValueMap
 import org.testcontainers.containers.PostgreSQLContainerProvider
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,7 +26,8 @@ import org.testcontainers.containers.PostgreSQLContainerProvider
         initializers = [SakillaIntegrationTest.TestDatabaseInitializer::class]
 )
 class SakillaIntegrationTest(
-        @Autowired private val restTemplate: TestRestTemplate
+        @Autowired private val restTemplate: TestRestTemplate,
+        @Autowired private val objectMapper: ObjectMapper
 ) {
     class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
         override fun initialize(applicationContext: ConfigurableApplicationContext) {
@@ -94,7 +100,12 @@ class SakillaIntegrationTest(
             val getResponse = restTemplate.getForEntity<Category>("/categories/14")
             Assertions.assertTrue(getResponse.statusCode.is2xxSuccessful)
             val category = getResponse.body
-            restTemplate.put("/categories/$category.id", category?.copy(name = "SF"))
+            val request = category?.copy(name = "SF")?.let {
+                val headers = LinkedMultiValueMap<String, String>()
+                headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
+                HttpEntity(it, headers)
+            }
+            restTemplate.put("/categories/$category.id", request)
         } catch (e: Exception) {
             Assertions.fail<Void>(e.message)
         }

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class Category(
         @Id
-        @Column("city_id")
+        @Column("category_id")
         val id: Int?,
         val name: String,
         val lastUpdate: LocalDateTime = LocalDateTime.now()
