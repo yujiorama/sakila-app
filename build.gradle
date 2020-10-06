@@ -44,16 +44,16 @@ subprojects {
             runtimeClasspath += sourceSets.main.output + sourceSets.test.output
 
             java {
-                srcDir file('src/test/java')
+                srcDirs('src/it/java')
             }
 
             kotlin {
-                srcDir file('src/test/kotlin')
+                srcDirs('src/it/kotlin')
             }
 
             //noinspection GroovyAssignabilityCheck
             resources {
-                srcDir file('src/test/resources')
+                srcDirs('src/it/resources')
             }
         }
     }
@@ -109,10 +109,6 @@ subprojects {
     }
 
     test {
-        filter {
-            excludeTestsMatching '*IntegrationTest'
-        }
-
         useJUnitPlatform()
         systemProperty 'spring.profiles.active', 'test'
         testLogging {
@@ -133,10 +129,6 @@ subprojects {
 
         testClassesDirs = sourceSets.integrationTest.output.classesDirs
         classpath = sourceSets.integrationTest.runtimeClasspath
-
-        filter {
-            includeTestsMatching '*IntegrationTest'
-        }
 
         useJUnitPlatform()
         systemProperty 'spring.profiles.active', 'it'
