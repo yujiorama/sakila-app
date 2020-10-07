@@ -40,8 +40,8 @@ subprojects {
 
     sourceSets {
         integrationTest {
-            compileClasspath += sourceSets.main.output + sourceSets.test.output
-            runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+            compileClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.output
 
             java {
                 srcDirs('src/it/java')
@@ -75,6 +75,7 @@ subprojects {
     dependencies {
         implementation('org.jetbrains.kotlin:kotlin-reflect')
         implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8')
+        implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
         annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
         compileOnly('org.projectlombok:lombok')
         annotationProcessor('org.projectlombok:lombok')
