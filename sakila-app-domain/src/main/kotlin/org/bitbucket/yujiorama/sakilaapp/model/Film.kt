@@ -26,5 +26,6 @@ data class Film(
         val specialFeatures: Array<String> = arrayOf(),
         val fulltext: String? = ""
 ) {
+        constructor(title: String, description: String, language: Language, rating: Rating, length: Int) : this(null, title, description, null, language, null, length)
         constructor(id: Int, title: String, description: String, language: Language, rating: Rating, length: Int) : this(id, title, description, null, language, null, length)
 }

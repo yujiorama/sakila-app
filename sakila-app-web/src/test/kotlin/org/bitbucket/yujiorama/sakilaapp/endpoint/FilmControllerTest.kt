@@ -1,9 +1,11 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.bitbucket.yujiorama.sakilaapp.model.Film
 import org.bitbucket.yujiorama.sakilaapp.model.FilmRepository
 import org.bitbucket.yujiorama.sakilaapp.model.Language
 import org.bitbucket.yujiorama.sakilaapp.model.Rating
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
@@ -21,7 +23,8 @@ import java.util.*
 @WebMvcTest
 class FilmControllerTest(
         @Autowired private val mockMvc: MockMvc,
-        @Autowired private val repository: FilmRepository
+        @Autowired private val repository: FilmRepository,
+        @Autowired private val objectMapper: ObjectMapper
 ) {
 
     @Test
@@ -60,28 +63,32 @@ class FilmControllerTest(
     }
 
     @Test
+    fun `enum class serialize test`() {
+        val actual = objectMapper.writeValueAsString(Rating.NC_17)
+        Assertions.assertEquals("\"NC-17\"", actual)
+    }
+
+    @Test
+    fun `enum class deserialize test`() {
+        val actual = objectMapper.readValue<Rating>("\"PG-13\"", Rating::class.java)
+        Assertions.assertEquals(Rating.PG_13, actual)
+    }
+
+    @Test
     fun `create request`() {
+        val requestFilm = Film(title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.PG_13, length = 120)
+        val savedFilm = requestFilm.copy(id = 1374, title = "saved")
+
         given(repository.save(any(Film::class.java)))
-                .willReturn(Film(id = 1374, title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.PG_13, length = 120))
+                .willReturn(savedFilm)
 
         mockMvc.perform(post("/films")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {
-                        "id":1374,
-                        "title:"aaa",
-                        "description":"aaa",
-                        "language": {
-                            "id":111,
-                            "name":"ja"
-                        },
-                        "rating": "PG-13",
-                        "length": 120
-                    }
-                """.trimIndent().trimMargin()))
+                .content(objectMapper.writeValueAsBytes(requestFilm)))
                 .andExpect(status().is2xxSuccessful)
-                .andExpect(jsonPath("$.rating").value("PG-13"))
+                .andExpect(jsonPath("$.title").value(savedFilm.title))
+                .andExpect(jsonPath("$.rating").value(savedFilm.rating?.serialize()!!))
     }
 
     @Test
@@ -97,7 +104,7 @@ class FilmControllerTest(
                 .content("""
                     {
                         "id":1374,
-                        "title:"aaa",
+                        "title":"aaa",
                         "description":"aaa",
                         "language": {
                             "id":111,
