@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Film
 import org.bitbucket.yujiorama.sakilaapp.model.FilmRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class FilmController(
     fun create(@RequestBody aFilm: Film): Film = repository.save(aFilm)
 
     @PutMapping("/films/{id}")
-    fun update(@RequestBody aFilm: Film, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aFilm: Film, @PathVariable id: Number): ResponseEntity<Film> {
 
         return repository.findById(id.toInt()).map {
             val newFilm = aFilm.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newFilm)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newFilm))
         }.orElse(ResponseEntity.notFound().build())
     }
 

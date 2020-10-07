@@ -17,12 +17,14 @@ data class Film(
         val language: Language,
         @MappedCollection(idColumn = "language_id")
         val originalLanguage: Language?,
+        val length: Int?,
         val rentalDuration: Int = 3,
         val rentalRate: BigDecimal = BigDecimal("4.99"),
-        val length: Int?,
         val replacementCost: BigDecimal = BigDecimal("19.99"),
         val rating: Rating? = Rating.G,
         val lastUpdate: LocalDateTime = LocalDateTime.now(),
-        val specialFeatures: Array<String>,
-        val fulltext: String
-)
+        val specialFeatures: Array<String> = arrayOf(),
+        val fulltext: String? = ""
+) {
+        constructor(id: Int, title: String, description: String, language: Language, rating: Rating, length: Int) : this(id, title, description, null, language, null, length)
+}
