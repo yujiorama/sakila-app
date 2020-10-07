@@ -30,12 +30,12 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 
-    ext {
-        testcontainersVersion = '1.14.3'
-    }
+    ext['testcontainersVersion'] = '1.14.3'
+    ext['kotlinfakerVersion'] = '1.5.0'
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     sourceSets {
@@ -84,6 +84,7 @@ subprojects {
         testImplementation('com.h2database:h2')
         testImplementation('org.testcontainers:junit-jupiter')
         testImplementation('org.testcontainers:postgresql')
+        testImplementation("io.github.serpro69:kotlin-faker:${kotlinfakerVersion}")
     }
 
     dependencyManagement {

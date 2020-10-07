@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Address
 import org.bitbucket.yujiorama.sakilaapp.model.AddressRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class AddressController(
     fun create(@RequestBody aAddress: Address): Address = repository.save(aAddress)
 
     @PutMapping("/addresses/{id}")
-    fun update(@RequestBody aAddress: Address, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aAddress: Address, @PathVariable id: Number): ResponseEntity<Address> {
 
         return repository.findById(id.toLong()).map {
             val newAddress = aAddress.copy(id = id.toLong(), lastUpdate = LocalDateTime.now())
-            repository.save(newAddress)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newAddress))
         }.orElse(ResponseEntity.notFound().build())
     }
 

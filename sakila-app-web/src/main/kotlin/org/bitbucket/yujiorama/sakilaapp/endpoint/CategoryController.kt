@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Category
 import org.bitbucket.yujiorama.sakilaapp.model.CategoryRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class CategoryController(
     fun create(@RequestBody aCategory: Category): Category = repository.save(aCategory)
 
     @PutMapping("/categories/{id}")
-    fun update(@RequestBody aCategory: Category, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aCategory: Category, @PathVariable id: Number): ResponseEntity<Category> {
 
         return repository.findById(id.toInt()).map {
             val newCategory = aCategory.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newCategory)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCategory))
         }.orElse(ResponseEntity.notFound().build())
     }
 

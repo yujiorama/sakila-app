@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Payment
 import org.bitbucket.yujiorama.sakilaapp.model.PaymentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class PaymentController(
     fun create(@RequestBody aPayment: Payment): Payment = repository.save(aPayment)
 
     @PutMapping("/payments/{id}")
-    fun update(@RequestBody aPayment: Payment, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aPayment: Payment, @PathVariable id: Number): ResponseEntity<Payment> {
 
         return repository.findById(id.toInt()).map {
             val newPayment = aPayment.copy(id = id.toInt(), paymentDate = LocalDateTime.now())
-            repository.save(newPayment)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newPayment))
         }.orElse(ResponseEntity.notFound().build())
     }
 

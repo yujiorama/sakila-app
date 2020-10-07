@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Country
 import org.bitbucket.yujiorama.sakilaapp.model.CountryRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class CountryController(
     fun create(@RequestBody aCountry: Country): Country = repository.save(aCountry)
 
     @PutMapping("/countries/{id}")
-    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Country> {
 
         return repository.findById(id.toInt()).map {
             val newCountry = aCountry.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newCountry)
-            ResponseEntity.accepted().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCountry))
         }.orElse(ResponseEntity.notFound().build())
     }
 

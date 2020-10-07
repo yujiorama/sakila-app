@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Actor
 import org.bitbucket.yujiorama.sakilaapp.model.ActorRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class ActorController(
     fun create(@RequestBody aActor: Actor): Actor = repository.save(aActor)
 
     @PutMapping("/actors/{id}")
-    fun update(@RequestBody aActor: Actor, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aActor: Actor, @PathVariable id: Number): ResponseEntity<Actor> {
 
         return repository.findById(id.toLong()).map {
             val newActor = aActor.copy(id = id.toLong(), lastUpdate = LocalDateTime.now())
-            repository.save(newActor)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newActor))
         }.orElse(ResponseEntity.notFound().build())
     }
 

@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.City
 import org.bitbucket.yujiorama.sakilaapp.model.CityRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class CityController(
     fun create(@RequestBody aCity: City): City = repository.save(aCity)
 
     @PutMapping("/cities/{id}")
-    fun update(@RequestBody aCity: City, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aCity: City, @PathVariable id: Number): ResponseEntity<City> {
 
         return repository.findById(id.toInt()).map {
             val newCity = aCity.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newCity)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCity))
         }.orElse(ResponseEntity.notFound().build())
     }
 

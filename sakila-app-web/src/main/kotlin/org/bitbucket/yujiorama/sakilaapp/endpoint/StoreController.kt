@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Store
 import org.bitbucket.yujiorama.sakilaapp.model.StoreRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class StoreController(
     fun create(@RequestBody aStore: Store): Store = repository.save(aStore)
 
     @PutMapping("/stores/{id}")
-    fun update(@RequestBody aStore: Store, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aStore: Store, @PathVariable id: Number): ResponseEntity<Store> {
 
         return repository.findById(id.toInt()).map {
             val newStore = aStore.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newStore)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStore))
         }.orElse(ResponseEntity.notFound().build())
     }
 

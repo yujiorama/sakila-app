@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Rental
 import org.bitbucket.yujiorama.sakilaapp.model.RentalRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class RentalController(
     fun create(@RequestBody aRental: Rental): Rental = repository.save(aRental)
 
     @PutMapping("/rentals/{id}")
-    fun update(@RequestBody aRental: Rental, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aRental: Rental, @PathVariable id: Number): ResponseEntity<Rental> {
 
         return repository.findById(id.toInt()).map {
             val newRental = aRental.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newRental)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newRental))
         }.orElse(ResponseEntity.notFound().build())
     }
 

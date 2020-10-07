@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Inventory
 import org.bitbucket.yujiorama.sakilaapp.model.InventoryRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class InventoryController(
     fun create(@RequestBody aInventory: Inventory): Inventory = repository.save(aInventory)
 
     @PutMapping("/inventories/{id}")
-    fun update(@RequestBody aInventory: Inventory, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aInventory: Inventory, @PathVariable id: Number): ResponseEntity<Inventory> {
 
         return repository.findById(id.toInt()).map {
             val newInventory = aInventory.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newInventory)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newInventory))
         }.orElse(ResponseEntity.notFound().build())
     }
 

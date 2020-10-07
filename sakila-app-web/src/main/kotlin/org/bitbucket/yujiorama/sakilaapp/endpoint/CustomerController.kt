@@ -3,6 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 import org.bitbucket.yujiorama.sakilaapp.model.Customer
 import org.bitbucket.yujiorama.sakilaapp.model.CustomerRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,12 +30,11 @@ class CustomerController(
     fun create(@RequestBody aCustomer: Customer): Customer = repository.save(aCustomer)
 
     @PutMapping("/customers/{id}")
-    fun update(@RequestBody aCustomer: Customer, @PathVariable id: Number): ResponseEntity<Void> {
+    fun update(@RequestBody aCustomer: Customer, @PathVariable id: Number): ResponseEntity<Customer> {
 
         return repository.findById(id.toInt()).map {
             val newCustomer = aCustomer.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            repository.save(newCustomer)
-            ResponseEntity.noContent().build<Void>()
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCustomer))
         }.orElse(ResponseEntity.notFound().build())
     }
 
