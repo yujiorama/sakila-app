@@ -1,56 +1,27 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import org.bitbucket.yujiorama.sakilaapp.model.Country
 import org.bitbucket.yujiorama.sakilaapp.model.CountryRepository
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.any
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
-@ContextConfiguration(classes = [CountryControllerTest.TestConfig::class])
+@ContextConfiguration(classes = [ControllerTestConfig::class])
 @WebMvcTest
 class CountryControllerTest(
         @Autowired private val mockMvc: MockMvc,
         @Autowired private val repository: CountryRepository
 ) {
-
-    @ActiveProfiles("test")
-    @Configuration
-    class TestConfig {
-        @Bean
-        fun countryRepository(): CountryRepository = Mockito.mock(CountryRepository::class.java)
-
-        @Bean
-        fun countryController(repository: CountryRepository): CountryController = CountryController(repository)
-
-        @Bean
-        fun jacksonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
-
-            return Jackson2ObjectMapperBuilderCustomizer { builder ->
-                run {
-                    builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ISO_DATE_TIME))
-                    builder.deserializers(LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME))
-                }
-            }
-        }
-    }
 
     @Test
     fun `all request`() {
