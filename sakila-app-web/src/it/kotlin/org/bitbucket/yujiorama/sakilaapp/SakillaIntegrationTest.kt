@@ -1,10 +1,6 @@
-package org.bitbucket.yujiorama.sakilaapp.endpoint
+package org.bitbucket.yujiorama.sakilaapp
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.bitbucket.yujiorama.sakilaapp.model.Actor
-import org.bitbucket.yujiorama.sakilaapp.model.Category
-import org.bitbucket.yujiorama.sakilaapp.model.Country
-import org.bitbucket.yujiorama.sakilaapp.model.Language
+import org.bitbucket.yujiorama.sakilaapp.model.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -29,8 +25,7 @@ import org.testcontainers.containers.PostgreSQLContainerProvider
         initializers = [SakillaIntegrationTest.TestDatabaseInitializer::class]
 )
 class SakillaIntegrationTest(
-        @Autowired private val restTemplate: TestRestTemplate,
-        @Autowired private val objectMapper: ObjectMapper
+        @Autowired private val restTemplate: TestRestTemplate
 ) {
     class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
         override fun initialize(applicationContext: ConfigurableApplicationContext) {
@@ -67,6 +62,26 @@ class SakillaIntegrationTest(
     fun `test countries`() {
         val res = restTemplate.getForEntity<List<Country>>("/countries")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
+    }
+
+    @Test
+    fun `read Film(PG)`() {
+        val res = restTemplate.getForEntity<Film>("/films/1")
+        Assertions.assertTrue(res.statusCode.is2xxSuccessful)
+        val film = res.body!!
+        Assertions.assertEquals(1, film.id)
+        Assertions.assertEquals("ACADEMY DINOSAUR", film.title)
+        Assertions.assertEquals(Rating.PG, film.rating)
+    }
+
+    @Test
+    fun `read Film(PG-13)`() {
+        val res = restTemplate.getForEntity<Film>("/films/7")
+        Assertions.assertTrue(res.statusCode.is2xxSuccessful)
+        val film = res.body!!
+        Assertions.assertEquals(7, film.id)
+        Assertions.assertEquals("AIRPLANE SIERRA", film.title)
+        Assertions.assertEquals(Rating.PG_13, film.rating)
     }
 
     @Test
