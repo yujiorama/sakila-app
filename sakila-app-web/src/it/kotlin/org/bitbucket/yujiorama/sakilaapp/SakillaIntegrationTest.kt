@@ -136,6 +136,30 @@ class SakillaIntegrationTest(
     }
 
     @Test
+    fun `read and write Staff picture`() {
+        val pictureBytes = byteArrayOf(1, 1, 2, 2, 3, 3)
+        try {
+            val res = restTemplate.getForEntity<Staff>("/staffs/1")
+            Assertions.assertTrue(res.statusCode.is2xxSuccessful)
+            val staff = res.body!!
+            val request = staff.copy(picture = pictureBytes).let {
+                val headers = LinkedMultiValueMap<String, String>()
+                headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
+                HttpEntity(it, headers)
+            }
+            restTemplate.put("/staffs/${staff.id}", request)
+        } catch (e: Exception) {
+            Assertions.fail<Void>(e.message)
+        }
+
+        val res = restTemplate.getForEntity<Staff>("/staffs/1")
+        Assertions.assertTrue(res.statusCode.is2xxSuccessful)
+        val staff = res.body!!
+        Assertions.assertEquals(1, staff.id)
+        Assertions.assertEquals(pictureBytes, staff.picture)
+    }
+
+    @Test
     fun `delete Staff(Jon Stephens)`() {
         try {
             restTemplate.delete("/staffs/2")

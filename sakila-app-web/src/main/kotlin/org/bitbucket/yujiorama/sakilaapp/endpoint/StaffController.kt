@@ -15,7 +15,7 @@ class StaffController(
         @Autowired private val repository: StaffRepository
 ) {
 
-    @GetMapping("/entities/{id}")
+    @GetMapping("/staffs/{id}")
     fun read(@PathVariable id: Number): ResponseEntity<Staff> {
 
         return repository.findById(id.toInt()).map {
@@ -23,13 +23,13 @@ class StaffController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/entities")
+    @GetMapping("/staffs")
     fun readAll(): List<Staff> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
-    @PostMapping("/entities")
+    @PostMapping("/staffs")
     fun create(@RequestBody aStaff: Staff): Staff = repository.save(aStaff)
 
-    @PutMapping("/entities/{id}")
+    @PutMapping("/staffs/{id}")
     fun update(@RequestBody aStaff: Staff, @PathVariable id: Number): ResponseEntity<Staff> {
 
         return repository.findById(id.toInt()).map {
@@ -38,7 +38,7 @@ class StaffController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/entities/{id}")
+    @DeleteMapping("/staffs/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

@@ -17,6 +17,7 @@ data class Staff(
         @MappedCollection(idColumn = "store_id")
         val store: Store,
         val active: Boolean = true,
+        @Column("username")
         val userName: String,
         val password: String?,
         val lastUpdate: LocalDateTime = LocalDateTime.now(),
