@@ -60,33 +60,33 @@ class SakillaIntegrationTest(
 
     @Test
     fun `test countries`() {
-        val res = restTemplate.getForEntity<List<Country>>("/countries")
+        val res = restTemplate.getForEntity<List<CountryEntity>>("/countries")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
     }
 
     @Test
     fun `read Film(PG)`() {
-        val res = restTemplate.getForEntity<Film>("/films/1")
+        val res = restTemplate.getForEntity<FilmEntity>("/films/1")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val film = res.body!!
         Assertions.assertEquals(1, film.id)
         Assertions.assertEquals("ACADEMY DINOSAUR", film.title)
-        Assertions.assertEquals(Rating.PG, film.rating)
+        Assertions.assertEquals(RatingEnum.PG, film.rating)
     }
 
     @Test
     fun `read Film(PG-13)`() {
-        val res = restTemplate.getForEntity<Film>("/films/7")
+        val res = restTemplate.getForEntity<FilmEntity>("/films/7")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val film = res.body!!
         Assertions.assertEquals(7, film.id)
         Assertions.assertEquals("AIRPLANE SIERRA", film.title)
-        Assertions.assertEquals(Rating.PG_13, film.rating)
+        Assertions.assertEquals(RatingEnum.PG_13, film.rating)
     }
 
     @Test
     fun `read Country(United States)`() {
-        val res = restTemplate.getForEntity<Country>("/countries/103")
+        val res = restTemplate.getForEntity<CountryEntity>("/countries/103")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val country = res.body
         Assertions.assertEquals(103, country?.id)
@@ -95,7 +95,7 @@ class SakillaIntegrationTest(
 
     @Test
     fun `read Actor(Judy Dean)`() {
-        val res = restTemplate.getForEntity<Actor>("/actors/35")
+        val res = restTemplate.getForEntity<ActorEntity>("/actors/35")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val actor = res.body
         Assertions.assertEquals(35, actor?.id)
@@ -105,7 +105,7 @@ class SakillaIntegrationTest(
 
     @Test
     fun `create Language(Spanish)`() {
-        val res = restTemplate.postForEntity<Language>("/languages", Language("Spanish"), Language::class.java)
+        val res = restTemplate.postForEntity<LanguageEntity>("/languages", LanguageEntity().withName("Spanish"), LanguageEntity::class.java)
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val language = res.body
         Assertions.assertNotNull(language?.id)
@@ -115,10 +115,10 @@ class SakillaIntegrationTest(
     @Test
     fun `update Category(Sci-Fi to SF)`() {
         try {
-            val getResponse = restTemplate.getForEntity<Category>("/categories/14")
+            val getResponse = restTemplate.getForEntity<CategoryEntity>("/categories/14")
             Assertions.assertTrue(getResponse.statusCode.is2xxSuccessful)
             val category = getResponse.body
-            val request = category?.copy(name = "SF")?.let {
+            val request = category?.withName("SF")?.let {
                 val headers = LinkedMultiValueMap<String, String>()
                 headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
                 HttpEntity(it, headers)
@@ -128,7 +128,7 @@ class SakillaIntegrationTest(
             Assertions.fail<Void>(e.message)
         }
 
-        val res = restTemplate.getForEntity<Category>("/categories/14")
+        val res = restTemplate.getForEntity<CategoryEntity>("/categories/14")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val newCategory = res.body
         Assertions.assertEquals(14, newCategory?.id)
@@ -139,10 +139,10 @@ class SakillaIntegrationTest(
     fun `read and write Staff picture`() {
         val pictureBytes = byteArrayOf(1, 1, 2, 2, 3, 3)
         try {
-            val res = restTemplate.getForEntity<Staff>("/staffs/1")
+            val res = restTemplate.getForEntity<StaffEntity>("/staffs/1")
             Assertions.assertTrue(res.statusCode.is2xxSuccessful)
             val staff = res.body!!
-            val request = staff.copy(picture = pictureBytes).let {
+            val request = staff.withPicture(pictureBytes).let {
                 val headers = LinkedMultiValueMap<String, String>()
                 headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
                 HttpEntity(it, headers)
@@ -152,7 +152,7 @@ class SakillaIntegrationTest(
             Assertions.fail<Void>(e.message)
         }
 
-        val res = restTemplate.getForEntity<Staff>("/staffs/1")
+        val res = restTemplate.getForEntity<StaffEntity>("/staffs/1")
         Assertions.assertTrue(res.statusCode.is2xxSuccessful)
         val staff = res.body!!
         Assertions.assertEquals(1, staff.id)

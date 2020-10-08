@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Store
-import org.bitbucket.yujiorama.sakilaapp.model.StoreRepository
+import org.bitbucket.yujiorama.sakilaapp.model.StoreEntity
+import org.bitbucket.yujiorama.sakilaapp.model.StoreEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,33 +12,35 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class StoreController(
-        @Autowired private val repository: StoreRepository
+        @Autowired private val repository: StoreEntityRepository
 ) {
 
-    @GetMapping("/stores/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Store> {
+    @GetMapping("/StoreEntitys/{id}")
+    fun read(@PathVariable id: Number): ResponseEntity<StoreEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/stores")
-    fun readAll(): List<Store> = repository.findAllByOrderByIdAsc()
+    @GetMapping("/StoreEntitys")
+    fun readAll(): List<StoreEntity> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/stores")
-    fun create(@RequestBody aStore: Store): Store = repository.save(aStore)
+    @PostMapping("/StoreEntitys")
+    fun create(@RequestBody aStoreEntity: StoreEntity): StoreEntity = repository.save(aStoreEntity)
 
-    @PutMapping("/stores/{id}")
-    fun update(@RequestBody aStore: Store, @PathVariable id: Number): ResponseEntity<Store> {
+    @PutMapping("/StoreEntitys/{id}")
+    fun update(@RequestBody aStoreEntity: StoreEntity, @PathVariable id: Number): ResponseEntity<StoreEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newStore = aStore.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStore))
+            val newStoreEntity = aStoreEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStoreEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/stores/{id}")
+    @DeleteMapping("/StoreEntitys/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

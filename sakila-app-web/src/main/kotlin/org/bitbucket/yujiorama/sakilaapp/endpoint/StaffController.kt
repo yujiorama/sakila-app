@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Staff
-import org.bitbucket.yujiorama.sakilaapp.model.StaffRepository
+import org.bitbucket.yujiorama.sakilaapp.model.StaffEntity
+import org.bitbucket.yujiorama.sakilaapp.model.StaffEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class StaffController(
-        @Autowired private val repository: StaffRepository
+        @Autowired private val repository: StaffEntityRepository
 ) {
 
     @GetMapping("/staffs/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Staff> {
+    fun read(@PathVariable id: Number): ResponseEntity<StaffEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,17 +24,19 @@ class StaffController(
     }
 
     @GetMapping("/staffs")
-    fun readAll(): List<Staff> = repository.findAllByOrderByFirstNameAscLastNameAsc()
+    fun readAll(): List<StaffEntity> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
     @PostMapping("/staffs")
-    fun create(@RequestBody aStaff: Staff): Staff = repository.save(aStaff)
+    fun create(@RequestBody aStaffEntity: StaffEntity): StaffEntity = repository.save(aStaffEntity)
 
     @PutMapping("/staffs/{id}")
-    fun update(@RequestBody aStaff: Staff, @PathVariable id: Number): ResponseEntity<Staff> {
+    fun update(@RequestBody aStaffEntity: StaffEntity, @PathVariable id: Number): ResponseEntity<StaffEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newStaff = aStaff.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStaff))
+            val newStaffEntity = aStaffEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStaffEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 

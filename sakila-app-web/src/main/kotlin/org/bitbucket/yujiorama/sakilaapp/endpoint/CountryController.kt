@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Country
-import org.bitbucket.yujiorama.sakilaapp.model.CountryRepository
+import org.bitbucket.yujiorama.sakilaapp.model.CountryEntity
+import org.bitbucket.yujiorama.sakilaapp.model.CountryEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class CountryController(
-        @Autowired private val repository: CountryRepository
+        @Autowired private val repository: CountryEntityRepository
 ) {
 
     @GetMapping("/countries/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Country> {
+    fun read(@PathVariable id: Number): ResponseEntity<CountryEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,17 +24,19 @@ class CountryController(
     }
 
     @GetMapping("/countries")
-    fun readAll(): List<Country> = repository.findAllByOrderByCountryAsc()
+    fun readAll(): List<CountryEntity> = repository.findAllByOrderByCountryAsc()
 
     @PostMapping("/countries")
-    fun create(@RequestBody aCountry: Country): Country = repository.save(aCountry)
+    fun create(@RequestBody aCountryEntity: CountryEntity): CountryEntity = repository.save(aCountryEntity)
 
     @PutMapping("/countries/{id}")
-    fun update(@RequestBody aCountry: Country, @PathVariable id: Number): ResponseEntity<Country> {
+    fun update(@RequestBody aCountryEntity: CountryEntity, @PathVariable id: Number): ResponseEntity<CountryEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newCountry = aCountry.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCountry))
+            val newCountryEntity = aCountryEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCountryEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 

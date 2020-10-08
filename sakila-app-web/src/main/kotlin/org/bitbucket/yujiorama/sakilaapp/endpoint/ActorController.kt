@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Actor
-import org.bitbucket.yujiorama.sakilaapp.model.ActorRepository
+import org.bitbucket.yujiorama.sakilaapp.model.ActorEntity
+import org.bitbucket.yujiorama.sakilaapp.model.ActorEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class ActorController(
-        @Autowired private val repository: ActorRepository
+        @Autowired private val repository: ActorEntityRepository
 ) {
 
     @GetMapping("/actors/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Actor> {
+    fun read(@PathVariable id: Number): ResponseEntity<ActorEntity> {
 
         return repository.findById(id.toLong()).map {
             ResponseEntity.ok(it)
@@ -24,17 +24,19 @@ class ActorController(
     }
 
     @GetMapping("/actors")
-    fun readAll(): List<Actor> = repository.findAllByOrderByFirstNameAscLastNameAsc()
+    fun readAll(): List<ActorEntity> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
     @PostMapping("/actors")
-    fun create(@RequestBody aActor: Actor): Actor = repository.save(aActor)
+    fun create(@RequestBody aActorEntity: ActorEntity): ActorEntity = repository.save(aActorEntity)
 
     @PutMapping("/actors/{id}")
-    fun update(@RequestBody aActor: Actor, @PathVariable id: Number): ResponseEntity<Actor> {
+    fun update(@RequestBody aActorEntity: ActorEntity, @PathVariable id: Number): ResponseEntity<ActorEntity> {
 
         return repository.findById(id.toLong()).map {
-            val newActor = aActor.copy(id = id.toLong(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newActor))
+            val newActorEntity = aActorEntity
+                    .withId(id.toLong())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newActorEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 

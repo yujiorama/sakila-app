@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Customer
-import org.bitbucket.yujiorama.sakilaapp.model.CustomerRepository
+import org.bitbucket.yujiorama.sakilaapp.model.CustomerEntity
+import org.bitbucket.yujiorama.sakilaapp.model.CustomerEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,33 +12,35 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class CustomerController(
-        @Autowired private val repository: CustomerRepository
+        @Autowired private val repository: CustomerEntityRepository
 ) {
 
-    @GetMapping("/customers/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Customer> {
+    @GetMapping("/CustomerEntitys/{id}")
+    fun read(@PathVariable id: Number): ResponseEntity<CustomerEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/customers")
-    fun readAll(): List<Customer> = repository.findAllByOrderByFirstNameAscLastNameAsc()
+    @GetMapping("/CustomerEntitys")
+    fun readAll(): List<CustomerEntity> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
-    @PostMapping("/customers")
-    fun create(@RequestBody aCustomer: Customer): Customer = repository.save(aCustomer)
+    @PostMapping("/CustomerEntitys")
+    fun create(@RequestBody aCustomerEntity: CustomerEntity): CustomerEntity = repository.save(aCustomerEntity)
 
-    @PutMapping("/customers/{id}")
-    fun update(@RequestBody aCustomer: Customer, @PathVariable id: Number): ResponseEntity<Customer> {
+    @PutMapping("/CustomerEntitys/{id}")
+    fun update(@RequestBody aCustomerEntity: CustomerEntity, @PathVariable id: Number): ResponseEntity<CustomerEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newCustomer = aCustomer.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCustomer))
+            val newCustomerEntity = aCustomerEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCustomerEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/customers/{id}")
+    @DeleteMapping("/CustomerEntitys/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

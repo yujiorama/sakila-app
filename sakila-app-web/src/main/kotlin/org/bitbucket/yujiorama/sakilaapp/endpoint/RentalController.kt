@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Rental
-import org.bitbucket.yujiorama.sakilaapp.model.RentalRepository
+import org.bitbucket.yujiorama.sakilaapp.model.RentalEntity
+import org.bitbucket.yujiorama.sakilaapp.model.RentalEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,33 +12,35 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class RentalController(
-        @Autowired private val repository: RentalRepository
+        @Autowired private val repository: RentalEntityRepository
 ) {
 
-    @GetMapping("/rentals/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Rental> {
+    @GetMapping("/RentalEntitys/{id}")
+    fun read(@PathVariable id: Number): ResponseEntity<RentalEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/rentals")
-    fun readAll(): List<Rental> = repository.findAllByOrderByIdAsc()
+    @GetMapping("/RentalEntitys")
+    fun readAll(): List<RentalEntity> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/rentals")
-    fun create(@RequestBody aRental: Rental): Rental = repository.save(aRental)
+    @PostMapping("/RentalEntitys")
+    fun create(@RequestBody aRentalEntity: RentalEntity): RentalEntity = repository.save(aRentalEntity)
 
-    @PutMapping("/rentals/{id}")
-    fun update(@RequestBody aRental: Rental, @PathVariable id: Number): ResponseEntity<Rental> {
+    @PutMapping("/RentalEntitys/{id}")
+    fun update(@RequestBody aRentalEntity: RentalEntity, @PathVariable id: Number): ResponseEntity<RentalEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newRental = aRental.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newRental))
+            val newRentalEntity = aRentalEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newRentalEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/rentals/{id}")
+    @DeleteMapping("/RentalEntitys/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

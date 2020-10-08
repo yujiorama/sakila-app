@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.Inventory
-import org.bitbucket.yujiorama.sakilaapp.model.InventoryRepository
+import org.bitbucket.yujiorama.sakilaapp.model.InventoryEntity
+import org.bitbucket.yujiorama.sakilaapp.model.InventoryEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class InventoryController(
-        @Autowired private val repository: InventoryRepository
+        @Autowired private val repository: InventoryEntityRepository
 ) {
 
     @GetMapping("/inventories/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<Inventory> {
+    fun read(@PathVariable id: Number): ResponseEntity<InventoryEntity> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,17 +24,19 @@ class InventoryController(
     }
 
     @GetMapping("/inventories")
-    fun readAll(): List<Inventory> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<InventoryEntity> = repository.findAllByOrderByIdAsc()
 
     @PostMapping("/inventories")
-    fun create(@RequestBody aInventory: Inventory): Inventory = repository.save(aInventory)
+    fun create(@RequestBody aInventoryEntity: InventoryEntity): InventoryEntity = repository.save(aInventoryEntity)
 
     @PutMapping("/inventories/{id}")
-    fun update(@RequestBody aInventory: Inventory, @PathVariable id: Number): ResponseEntity<Inventory> {
+    fun update(@RequestBody aInventoryEntity: InventoryEntity, @PathVariable id: Number): ResponseEntity<InventoryEntity> {
 
         return repository.findById(id.toInt()).map {
-            val newInventory = aInventory.copy(id = id.toInt(), lastUpdate = LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newInventory))
+            val newInventoryEntity = aInventoryEntity
+                    .withId(id.toInt())
+                    .withLastUpdate(LocalDateTime.now())
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newInventoryEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
