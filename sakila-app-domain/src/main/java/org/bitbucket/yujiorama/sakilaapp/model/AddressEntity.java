@@ -43,8 +43,8 @@ public class AddressEntity implements Serializable {
     @JsonProperty("district")
     private String district;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "city_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "city_id", referencedColumnName = "city_id", nullable = false)
     @JsonProperty("city")
     private CityEntity city;
 

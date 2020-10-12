@@ -48,8 +48,8 @@ public class CustomerEntity implements Serializable {
     @JsonProperty("email")
     private String email;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "address_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
     private AddressEntity address;
 

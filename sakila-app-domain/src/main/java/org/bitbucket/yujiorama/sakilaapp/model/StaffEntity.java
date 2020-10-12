@@ -39,8 +39,8 @@ public class StaffEntity implements Serializable {
     @JsonProperty("last_name")
     private String lastName;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "address_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false, unique = true)
     @JsonProperty("address")
     private AddressEntity address;
 
@@ -48,8 +48,8 @@ public class StaffEntity implements Serializable {
     @JsonProperty("email")
     private String email;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "store_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false, unique = true)
     @JsonProperty("store")
     private StoreEntity store;
 

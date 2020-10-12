@@ -47,12 +47,12 @@ public class FilmEntity implements Serializable {
     private Integer releaseYear;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "language_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "language_id", unique = true, nullable = false, insertable = false, updatable = false)
     @JsonProperty("language")
     private LanguageEntity language;
 
     @OneToOne
-    @JoinColumn(name = "language_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "language_id", unique = true, nullable = false, insertable = false, updatable = false)
     @JsonProperty("original_language")
     private LanguageEntity originalLanguage;
 

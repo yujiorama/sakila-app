@@ -36,7 +36,7 @@ public class CityEntity implements Serializable {
     private String city;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "country_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "country_id", referencedColumnName = "country_id", nullable = false)
     @JsonProperty("country")
     private CountryEntity country;
 }

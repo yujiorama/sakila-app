@@ -33,17 +33,17 @@ public class PaymentEntity implements Serializable {
     private LocalDateTime paymentDate;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "customer_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "customer_id", unique = true, nullable = false)
     @JsonProperty("customer")
     private CustomerEntity customer;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "staff_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "staff_id", unique = true, nullable = false)
     @JsonProperty("staff")
     private StaffEntity staff;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "rental_id", unique = true, nullable = false, updatable = false)
+    @JoinColumn(name = "rental_id", unique = true, nullable = false)
     @JsonProperty("rental")
     private RentalEntity rental;
 

@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cztegory")
+@Table(name = "category")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))

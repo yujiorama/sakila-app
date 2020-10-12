@@ -22,7 +22,8 @@ public class LanguageEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "language_language_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "language_id")
     @JsonProperty("language_id")
     private Integer id;
@@ -34,4 +35,12 @@ public class LanguageEntity implements Serializable {
     @Column(name = "name", nullable = false)
     @JsonProperty("name")
     private String name;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }
