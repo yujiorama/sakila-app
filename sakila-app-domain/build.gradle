@@ -8,15 +8,5 @@ dependencies {
     implementation('org.flywaydb:flyway-core')
 }
 
-idea {
-    module {
-        excludeDirs = [file('src/main/kotlin'), file('src/test/kotlin')]
-    }
-}
-
 // disable spring-boot app configuration
 tasks.jar.enabled = true
-
-tasks.compileKotlin.enabled = false
-tasks.compileTestKotlin.enabled = false
-tasks.inspectClassesForKotlinIC.enabled = false
