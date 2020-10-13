@@ -16,8 +16,8 @@
 * [x] 他のエンティティの CRUD 操作が成功する
 * [x] `enum class` のためのマッパーを構成する
 * [x] `ByteArray` のためのマッパーを構成する
-* [ ] actuator を構成する
-* [ ] logging を構成する
+* [x] actuator を構成する
+* [x] logging を構成する
 
 ## sakila-app-batch
 
