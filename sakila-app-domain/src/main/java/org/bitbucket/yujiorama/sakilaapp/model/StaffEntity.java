@@ -1,5 +1,6 @@
 package org.bitbucket.yujiorama.sakilaapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,6 +52,7 @@ public class StaffEntity implements Serializable {
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false, unique = true)
     @JsonProperty("store")
+    @JsonIgnoreProperties({"manager_staff"})
     private StoreEntity store;
 
     @Column(name = "active", nullable = false)

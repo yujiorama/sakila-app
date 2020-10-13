@@ -56,7 +56,98 @@ public class JsonSerializeDeserializeTest {
         store.setManagerStaff(staff);
         final var serialized = this.objectMapper.writeValueAsString(staff);
         Assertions.assertTrue(serialized.length() > 0, "serialized");
-        final var deserialized = this.objectMapper.readValue(serialized, StaffEntity.class);
-        Assertions.assertEquals(staff, deserialized);
+        Assertions.assertNotEquals("{}", serialized);
+    }
+
+    @Test
+    public void testDeserialize() throws JsonProcessingException {
+
+        final var json = "{\n" +
+            "  \"staff_id\": 1,\n" +
+            "  \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "  \"first_name\": \"aaa\",\n" +
+            "  \"last_name\": \"bbb\",\n" +
+            "  \"address\": {\n" +
+            "    \"address_id\": 1,\n" +
+            "    \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "    \"address\": \"address\",\n" +
+            "    \"address2\": \"address2\",\n" +
+            "    \"district\": \"distinct\",\n" +
+            "    \"city\": {\n" +
+            "      \"city_id\": 1,\n" +
+            "      \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "      \"city\": \"city\",\n" +
+            "      \"country\": {\n" +
+            "        \"country_id\": 1,\n" +
+            "        \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "        \"country\": \"country\"\n" +
+            "      }\n" +
+            "    },\n" +
+            "    \"postal_code\": \"101\",\n" +
+            "    \"phone\": \"010\"\n" +
+            "  },\n" +
+            "  \"email\": \"aaa@example.com\",\n" +
+            "  \"store\": {\n" +
+            "    \"store_id\": 1,\n" +
+            "    \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "    \"address\": {\n" +
+            "      \"address_id\": 1,\n" +
+            "      \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "      \"address\": \"address\",\n" +
+            "      \"address2\": \"address2\",\n" +
+            "      \"district\": \"distinct\",\n" +
+            "      \"city\": {\n" +
+            "        \"city_id\": 1,\n" +
+            "        \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "        \"city\": \"city\",\n" +
+            "        \"country\": {\n" +
+            "          \"country_id\": 1,\n" +
+            "          \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "          \"country\": \"country\"\n" +
+            "        }\n" +
+            "      },\n" +
+            "      \"postal_code\": \"101\",\n" +
+            "      \"phone\": \"010\"\n" +
+            "    },\n" +
+            "    \"manager_staff\": {\n" +
+            "      \"staff_id\": 1,\n" +
+            "      \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "      \"first_name\": \"aaa\",\n" +
+            "      \"last_name\": \"bbb\",\n" +
+            "      \"address\": {\n" +
+            "        \"address_id\": 1,\n" +
+            "        \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "        \"address\": \"address\",\n" +
+            "        \"address2\": \"address2\",\n" +
+            "        \"district\": \"distinct\",\n" +
+            "        \"city\": {\n" +
+            "          \"city_id\": 1,\n" +
+            "          \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "          \"city\": \"city\",\n" +
+            "          \"country\": {\n" +
+            "            \"country_id\": 1,\n" +
+            "            \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "            \"country\": \"country\"\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"postal_code\": \"101\",\n" +
+            "        \"phone\": \"010\"\n" +
+            "      },\n" +
+            "      \"email\": \"aaa@example.com\",\n" +
+            "      \"active\": false,\n" +
+            "      \"username\": \"aaa\",\n" +
+            "      \"password\": \"bbb\",\n" +
+            "      \"picture\": null\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"active\": false,\n" +
+            "  \"username\": \"aaa\",\n" +
+            "  \"password\": \"bbb\",\n" +
+            "  \"picture\": null\n" +
+            "}";
+
+        final var deserialized = this.objectMapper.readValue(json, StaffEntity.class);
+
+        Assertions.assertEquals(1, deserialized.getId(), "getId");
     }
 }
