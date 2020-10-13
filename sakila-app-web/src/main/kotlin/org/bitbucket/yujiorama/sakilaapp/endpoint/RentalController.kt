@@ -15,7 +15,7 @@ class RentalController(
         @Autowired private val repository: RentalRepository
 ) {
 
-    @GetMapping("/RentalEntitys/{id}")
+    @GetMapping("/rentals/{id}")
     fun read(@PathVariable id: Number): ResponseEntity<Rental> {
 
         return repository.findById(id.toInt()).map {
@@ -23,13 +23,13 @@ class RentalController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/RentalEntitys")
+    @GetMapping("/rentals")
     fun readAll(): List<Rental> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/RentalEntitys")
+    @PostMapping("/rentals")
     fun create(@RequestBody aRental: Rental): Rental = repository.save(aRental)
 
-    @PutMapping("/RentalEntitys/{id}")
+    @PutMapping("/rentals/{id}")
     fun update(@RequestBody aRental: Rental, @PathVariable id: Number): ResponseEntity<Rental> {
 
         return repository.findById(id.toInt()).map {
@@ -40,7 +40,7 @@ class RentalController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/RentalEntitys/{id}")
+    @DeleteMapping("/rentals/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

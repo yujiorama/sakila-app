@@ -15,7 +15,7 @@ class PaymentController(
         @Autowired private val repository: PaymentRepository
 ) {
 
-    @GetMapping("/PaymentEntitys/{id}")
+    @GetMapping("/payments/{id}")
     fun read(@PathVariable id: Number): ResponseEntity<Payment> {
 
         return repository.findById(id.toInt()).map {
@@ -23,13 +23,13 @@ class PaymentController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/PaymentEntitys")
+    @GetMapping("/payments")
     fun readAll(): List<Payment> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/PaymentEntitys")
+    @PostMapping("/payments")
     fun create(@RequestBody aPayment: Payment): Payment = repository.save(aPayment)
 
-    @PutMapping("/PaymentEntitys/{id}")
+    @PutMapping("/payments/{id}")
     fun update(@RequestBody aPayment: Payment, @PathVariable id: Number): ResponseEntity<Payment> {
 
         return repository.findById(id.toInt()).map {
@@ -40,7 +40,7 @@ class PaymentController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/PaymentEntitys/{id}")
+    @DeleteMapping("/payments/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

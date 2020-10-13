@@ -15,7 +15,7 @@ class CustomerController(
         @Autowired private val repository: CustomerRepository
 ) {
 
-    @GetMapping("/CustomerEntitys/{id}")
+    @GetMapping("/customers/{id}")
     fun read(@PathVariable id: Number): ResponseEntity<Customer> {
 
         return repository.findById(id.toInt()).map {
@@ -23,13 +23,13 @@ class CustomerController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/CustomerEntitys")
+    @GetMapping("/customers")
     fun readAll(): List<Customer> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
-    @PostMapping("/CustomerEntitys")
+    @PostMapping("/customers")
     fun create(@RequestBody aCustomer: Customer): Customer = repository.save(aCustomer)
 
-    @PutMapping("/CustomerEntitys/{id}")
+    @PutMapping("/customers/{id}")
     fun update(@RequestBody aCustomer: Customer, @PathVariable id: Number): ResponseEntity<Customer> {
 
         return repository.findById(id.toInt()).map {
@@ -40,7 +40,7 @@ class CustomerController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/CustomerEntitys/{id}")
+    @DeleteMapping("/customers/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

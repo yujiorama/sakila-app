@@ -15,7 +15,7 @@ class StoreController(
         @Autowired private val repository: StoreRepository
 ) {
 
-    @GetMapping("/StoreEntitys/{id}")
+    @GetMapping("/stores/{id}")
     fun read(@PathVariable id: Number): ResponseEntity<Store> {
 
         return repository.findById(id.toInt()).map {
@@ -23,13 +23,13 @@ class StoreController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/StoreEntitys")
+    @GetMapping("/stores")
     fun readAll(): List<Store> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/StoreEntitys")
+    @PostMapping("/stores")
     fun create(@RequestBody aStore: Store): Store = repository.save(aStore)
 
-    @PutMapping("/StoreEntitys/{id}")
+    @PutMapping("/stores/{id}")
     fun update(@RequestBody aStore: Store, @PathVariable id: Number): ResponseEntity<Store> {
 
         return repository.findById(id.toInt()).map {
@@ -40,7 +40,7 @@ class StoreController(
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/StoreEntitys/{id}")
+    @DeleteMapping("/stores/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {
