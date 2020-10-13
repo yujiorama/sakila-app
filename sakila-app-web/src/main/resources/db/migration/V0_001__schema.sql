@@ -24,7 +24,8 @@ REPLACE PROCEDURAL LANGUAGE plpgsql;
 
 
 ALTER
-PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
+PROCEDURAL LANGUAGE plpgsql OWNER TO
+${DB_USER};
 
 SET search_path = public, pg_catalog;
 
@@ -41,7 +42,7 @@ SEQUENCE actor_actor_id_seq
 1;
 
 
-ALTER TABLE public.actor_actor_id_seq OWNER TO postgres;
+ALTER TABLE public.actor_actor_id_seq OWNER TO ${DB_USER};
 
 SET default_tablespace = '';
 
@@ -60,7 +61,7 @@ CREATE TABLE actor
 );
 
 
-ALTER TABLE public.actor OWNER TO postgres;
+ALTER TABLE public.actor OWNER TO ${DB_USER};
 
 --
 -- Name: mpaa_rating; Type: TYPE; Schema: public; Owner: postgres
@@ -77,7 +78,8 @@ TYPE mpaa_rating AS ENUM (
 
 
 ALTER
-TYPE public.mpaa_rating OWNER TO postgres;
+TYPE public.mpaa_rating OWNER TO
+${DB_USER};
 
 --
 -- Name: year; Type: DOMAIN; Schema: public; Owner: postgres
@@ -90,7 +92,8 @@ CHECK (((VALUE >= 1901) AND (VALUE <= 2155)));
 
 
 ALTER
-DOMAIN public.year OWNER TO postgres;
+DOMAIN public.year OWNER TO
+${DB_USER};
 
 --
 -- Name: _group_concat(text, text); Type: FUNCTION; Schema: public; Owner: postgres
@@ -107,7 +110,7 @@ SELECT CASE
     LANGUAGE sql IMMUTABLE;
 
 
-ALTER FUNCTION public._group_concat(text, text) OWNER TO postgres;
+ALTER FUNCTION public._group_concat(text, text) OWNER TO ${DB_USER};
 
 --
 -- Name: group_concat(text); Type: AGGREGATE; Schema: public; Owner: postgres
@@ -120,7 +123,8 @@ CREATE AGGREGATE group_concat (text) (
 
 
 ALTER
-AGGREGATE public.group_concat(text) OWNER TO postgres;
+AGGREGATE public.group_concat(text) OWNER TO
+${DB_USER};
 
 --
 -- Name: category_category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -135,7 +139,7 @@ SEQUENCE category_category_id_seq
 1;
 
 
-ALTER TABLE public.category_category_id_seq OWNER TO postgres;
+ALTER TABLE public.category_category_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: category; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -149,7 +153,7 @@ CREATE TABLE category
 );
 
 
-ALTER TABLE public.category OWNER TO postgres;
+ALTER TABLE public.category OWNER TO ${DB_USER};
 
 --
 -- Name: film_film_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -164,7 +168,7 @@ SEQUENCE film_film_id_seq
 1;
 
 
-ALTER TABLE public.film_film_id_seq OWNER TO postgres;
+ALTER TABLE public.film_film_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: film; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -189,7 +193,7 @@ CREATE TABLE film
 );
 
 
-ALTER TABLE public.film OWNER TO postgres;
+ALTER TABLE public.film OWNER TO ${DB_USER};
 
 --
 -- Name: film_actor; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -203,7 +207,7 @@ CREATE TABLE film_actor
 );
 
 
-ALTER TABLE public.film_actor OWNER TO postgres;
+ALTER TABLE public.film_actor OWNER TO ${DB_USER};
 
 --
 -- Name: film_category; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -217,7 +221,7 @@ CREATE TABLE film_category
 );
 
 
-ALTER TABLE public.film_category OWNER TO postgres;
+ALTER TABLE public.film_category OWNER TO ${DB_USER};
 
 --
 -- Name: actor_info; Type: VIEW; Schema: public; Owner: postgres
@@ -237,7 +241,7 @@ FROM (((actor a LEFT JOIN film_actor fa ON ((a.actor_id = fa.actor_id))) LEFT JO
 GROUP BY a.actor_id, a.first_name, a.last_name;
 
 
-ALTER TABLE public.actor_info OWNER TO postgres;
+ALTER TABLE public.actor_info OWNER TO ${DB_USER};
 
 --
 -- Name: address_address_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -252,7 +256,7 @@ SEQUENCE address_address_id_seq
 1;
 
 
-ALTER TABLE public.address_address_id_seq OWNER TO postgres;
+ALTER TABLE public.address_address_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: address; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -271,7 +275,7 @@ CREATE TABLE address
 );
 
 
-ALTER TABLE public.address OWNER TO postgres;
+ALTER TABLE public.address OWNER TO ${DB_USER};
 
 --
 -- Name: city_city_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -286,7 +290,7 @@ SEQUENCE city_city_id_seq
 1;
 
 
-ALTER TABLE public.city_city_id_seq OWNER TO postgres;
+ALTER TABLE public.city_city_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: city; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -301,7 +305,7 @@ CREATE TABLE city
 );
 
 
-ALTER TABLE public.city OWNER TO postgres;
+ALTER TABLE public.city OWNER TO ${DB_USER};
 
 --
 -- Name: country_country_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -316,7 +320,7 @@ SEQUENCE country_country_id_seq
 1;
 
 
-ALTER TABLE public.country_country_id_seq OWNER TO postgres;
+ALTER TABLE public.country_country_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: country; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -330,7 +334,7 @@ CREATE TABLE country
 );
 
 
-ALTER TABLE public.country OWNER TO postgres;
+ALTER TABLE public.country OWNER TO ${DB_USER};
 
 --
 -- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -345,7 +349,7 @@ SEQUENCE customer_customer_id_seq
 1;
 
 
-ALTER TABLE public.customer_customer_id_seq OWNER TO postgres;
+ALTER TABLE public.customer_customer_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: customer; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -366,7 +370,7 @@ CREATE TABLE customer
 );
 
 
-ALTER TABLE public.customer OWNER TO postgres;
+ALTER TABLE public.customer OWNER TO ${DB_USER};
 
 --
 -- Name: customer_list; Type: VIEW; Schema: public; Owner: postgres
@@ -386,7 +390,7 @@ FROM (((customer cu JOIN address a ON ((cu.address_id = a.address_id))) JOIN cit
          JOIN country ON ((city.country_id = country.country_id)));
 
 
-ALTER TABLE public.customer_list OWNER TO postgres;
+ALTER TABLE public.customer_list OWNER TO ${DB_USER};
 
 --
 -- Name: film_list; Type: VIEW; Schema: public; Owner: postgres
@@ -406,7 +410,7 @@ FROM ((((category LEFT JOIN film_category ON ((category.category_id = film_categ
 GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
 
 
-ALTER TABLE public.film_list OWNER TO postgres;
+ALTER TABLE public.film_list OWNER TO ${DB_USER};
 
 --
 -- Name: inventory_inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -421,7 +425,7 @@ SEQUENCE inventory_inventory_id_seq
 1;
 
 
-ALTER TABLE public.inventory_inventory_id_seq OWNER TO postgres;
+ALTER TABLE public.inventory_inventory_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: inventory; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -436,7 +440,7 @@ CREATE TABLE inventory
 );
 
 
-ALTER TABLE public.inventory OWNER TO postgres;
+ALTER TABLE public.inventory OWNER TO ${DB_USER};
 
 --
 -- Name: language_language_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -451,7 +455,7 @@ SEQUENCE language_language_id_seq
 1;
 
 
-ALTER TABLE public.language_language_id_seq OWNER TO postgres;
+ALTER TABLE public.language_language_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: language; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -465,7 +469,7 @@ CREATE TABLE language
 );
 
 
-ALTER TABLE public.language OWNER TO postgres;
+ALTER TABLE public.language OWNER TO ${DB_USER};
 
 --
 -- Name: nicer_but_slower_film_list; Type: VIEW; Schema: public; Owner: postgres
@@ -488,7 +492,7 @@ FROM ((((category LEFT JOIN film_category ON ((category.category_id = film_categ
 GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
 
 
-ALTER TABLE public.nicer_but_slower_film_list OWNER TO postgres;
+ALTER TABLE public.nicer_but_slower_film_list OWNER TO ${DB_USER};
 
 --
 -- Name: payment_payment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -503,7 +507,7 @@ SEQUENCE payment_payment_id_seq
 1;
 
 
-ALTER TABLE public.payment_payment_id_seq OWNER TO postgres;
+ALTER TABLE public.payment_payment_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: payment; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -520,7 +524,7 @@ CREATE TABLE payment
 );
 
 
-ALTER TABLE public.payment OWNER TO postgres;
+ALTER TABLE public.payment OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_01; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -536,7 +540,7 @@ CREATE TABLE payment_p2007_01
     (payment);
 
 
-ALTER TABLE public.payment_p2007_01 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_01 OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_02; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -552,7 +556,7 @@ CREATE TABLE payment_p2007_02
     (payment);
 
 
-ALTER TABLE public.payment_p2007_02 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_02 OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_03; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -568,7 +572,7 @@ CREATE TABLE payment_p2007_03
     (payment);
 
 
-ALTER TABLE public.payment_p2007_03 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_03 OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_04; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -584,7 +588,7 @@ CREATE TABLE payment_p2007_04
     (payment);
 
 
-ALTER TABLE public.payment_p2007_04 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_04 OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_05; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -600,7 +604,7 @@ CREATE TABLE payment_p2007_05
     (payment);
 
 
-ALTER TABLE public.payment_p2007_05 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_05 OWNER TO ${DB_USER};
 
 --
 -- Name: payment_p2007_06; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -616,7 +620,7 @@ CREATE TABLE payment_p2007_06
     (payment);
 
 
-ALTER TABLE public.payment_p2007_06 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_06 OWNER TO ${DB_USER};
 
 --
 -- Name: rental_rental_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -631,7 +635,7 @@ SEQUENCE rental_rental_id_seq
 1;
 
 
-ALTER TABLE public.rental_rental_id_seq OWNER TO postgres;
+ALTER TABLE public.rental_rental_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: rental; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -649,7 +653,7 @@ CREATE TABLE rental
 );
 
 
-ALTER TABLE public.rental OWNER TO postgres;
+ALTER TABLE public.rental OWNER TO ${DB_USER};
 
 --
 -- Name: sales_by_film_category; Type: VIEW; Schema: public; Owner: postgres
@@ -663,7 +667,7 @@ GROUP BY c.name
 ORDER BY sum(p.amount) DESC;
 
 
-ALTER TABLE public.sales_by_film_category OWNER TO postgres;
+ALTER TABLE public.sales_by_film_category OWNER TO ${DB_USER};
 
 --
 -- Name: staff_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -678,7 +682,7 @@ SEQUENCE staff_staff_id_seq
 1;
 
 
-ALTER TABLE public.staff_staff_id_seq OWNER TO postgres;
+ALTER TABLE public.staff_staff_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: staff; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -700,7 +704,7 @@ CREATE TABLE staff
 );
 
 
-ALTER TABLE public.staff OWNER TO postgres;
+ALTER TABLE public.staff OWNER TO ${DB_USER};
 
 --
 -- Name: store_store_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -715,7 +719,7 @@ SEQUENCE store_store_id_seq
 1;
 
 
-ALTER TABLE public.store_store_id_seq OWNER TO postgres;
+ALTER TABLE public.store_store_id_seq OWNER TO ${DB_USER};
 
 --
 -- Name: store; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -730,7 +734,7 @@ CREATE TABLE store
 );
 
 
-ALTER TABLE public.store OWNER TO postgres;
+ALTER TABLE public.store OWNER TO ${DB_USER};
 
 --
 -- Name: sales_by_store; Type: VIEW; Schema: public; Owner: postgres
@@ -746,7 +750,7 @@ GROUP BY cy.country, c.city, s.store_id, m.first_name, m.last_name
 ORDER BY cy.country, c.city;
 
 
-ALTER TABLE public.sales_by_store OWNER TO postgres;
+ALTER TABLE public.sales_by_store OWNER TO ${DB_USER};
 
 --
 -- Name: staff_list; Type: VIEW; Schema: public; Owner: postgres
@@ -765,7 +769,7 @@ FROM (((staff s JOIN address a ON ((s.address_id = a.address_id))) JOIN city ON 
          JOIN country ON ((city.country_id = country.country_id)));
 
 
-ALTER TABLE public.staff_list OWNER TO postgres;
+ALTER TABLE public.staff_list OWNER TO ${DB_USER};
 
 --
 -- Name: film_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -782,7 +786,7 @@ $_$
     LANGUAGE sql;
 
 
-ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
+ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO ${DB_USER};
 
 --
 -- Name: film_not_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -799,7 +803,7 @@ $_$
     LANGUAGE sql;
 
 
-ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
+ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO ${DB_USER};
 
 --
 -- Name: get_customer_balance(integer, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
@@ -856,7 +860,7 @@ $$
     LANGUAGE plpgsql;
 
 
-ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO postgres;
+ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO ${DB_USER};
 
 --
 -- Name: inventory_held_by_customer(integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -878,7 +882,7 @@ END $$
     LANGUAGE plpgsql;
 
 
-ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO postgres;
+ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO ${DB_USER};
 
 --
 -- Name: inventory_in_stock(integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -917,7 +921,7 @@ END $$
     LANGUAGE plpgsql;
 
 
-ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO postgres;
+ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO ${DB_USER};
 
 --
 -- Name: last_day(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
@@ -935,7 +939,7 @@ SELECT CASE
     LANGUAGE sql IMMUTABLE STRICT;
 
 
-ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO postgres;
+ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO ${DB_USER};
 
 --
 -- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -949,7 +953,7 @@ END $$
     LANGUAGE plpgsql;
 
 
-ALTER FUNCTION public.last_updated() OWNER TO postgres;
+ALTER FUNCTION public.last_updated() OWNER TO ${DB_USER};
 
 --
 -- Name: rewards_report(integer, numeric); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1017,7 +1021,7 @@ $_$
     LANGUAGE plpgsql SECURITY DEFINER;
 
 
-ALTER FUNCTION public.rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric) OWNER TO postgres;
+ALTER FUNCTION public.rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric) OWNER TO ${DB_USER};
 
 --
 -- Name: actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
@@ -1985,7 +1989,7 @@ DELETE RESTRICT;
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO ${DB_USER};
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 

@@ -32,9 +32,11 @@ class SakillaIntegrationTest(
 
             database.start()
             TestPropertyValues.of(
-                    "spring.datasource.url=" + database.getJdbcUrl(),
-                    "spring.datasource.username=" + database.getUsername(),
-                    "spring.datasource.password=" + database.getPassword()
+                    "spring.datasource.url=${database.jdbcUrl}",
+                    "spring.datasource.username=${database.username}",
+                    "spring.datasource.password=${database.password}",
+                    "spring.flyway.placeholders.DB_USER=${database.username}",
+                    "spring.flyway.placeholders.DB_PASSWORD=${database.password}"
             ).applyTo(applicationContext.environment)
         }
 
