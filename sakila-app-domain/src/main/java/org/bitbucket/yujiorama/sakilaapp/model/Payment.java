@@ -3,7 +3,6 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -16,11 +15,14 @@ import java.time.LocalDateTime;
 @Table(name = "inventory")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class PaymentEntity implements Serializable {
+public class Payment implements Serializable {
 
     private static final long serialVersionUID = 1374L;
+
+    @PersistenceConstructor
+    public Payment() {
+    }
 
     @Id
     @SequenceGenerator(name = "payment_payment_id_seq", allocationSize = 1)
@@ -38,21 +40,21 @@ public class PaymentEntity implements Serializable {
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
     @JsonProperty("customer")
-    private CustomerEntity customer;
+    private Customer customer;
 
     @OneToOne(
         optional = false,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", nullable = false)
     @JsonProperty("staff")
-    private StaffEntity staff;
+    private Staff staff;
 
     @OneToOne(
         optional = false,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "rental_id", referencedColumnName = "rental_id", nullable = false)
     @JsonProperty("rental")
-    private RentalEntity rental;
+    private Rental rental;
 
     @Column(name = "amount", nullable = false)
     @JsonProperty("amount")

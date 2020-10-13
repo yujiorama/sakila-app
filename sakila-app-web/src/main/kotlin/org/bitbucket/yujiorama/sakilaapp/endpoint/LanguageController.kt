@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.LanguageEntity
-import org.bitbucket.yujiorama.sakilaapp.model.LanguageEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Language
+import org.bitbucket.yujiorama.sakilaapp.model.LanguageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class LanguageController(
-        @Autowired private val repository: LanguageEntityRepository
+        @Autowired private val repository: LanguageRepository
 ) {
 
     @GetMapping("/languages/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<LanguageEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Language> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class LanguageController(
     }
 
     @GetMapping("/languages")
-    fun readAll(): List<LanguageEntity> = repository.findAllByOrderByNameAsc()
+    fun readAll(): List<Language> = repository.findAllByOrderByNameAsc()
 
     @PostMapping("/languages")
-    fun create(@RequestBody aLanguageEntity: LanguageEntity): LanguageEntity = repository.save(aLanguageEntity)
+    fun create(@RequestBody aLanguage: Language): Language = repository.save(aLanguage)
 
     @PutMapping("/languages/{id}")
-    fun update(@RequestBody aLanguageEntity: LanguageEntity, @PathVariable id: Number): ResponseEntity<LanguageEntity> {
+    fun update(@RequestBody aLanguage: Language, @PathVariable id: Number): ResponseEntity<Language> {
 
         return repository.findById(id.toInt()).map {
-            val newLanguageEntity = aLanguageEntity
+            val newLanguageEntity = aLanguage
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newLanguageEntity))

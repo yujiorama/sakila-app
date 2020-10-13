@@ -3,7 +3,6 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -12,37 +11,45 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "inventory")
+@Table(name = "city")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class InventoryEntity implements Serializable {
+public class City implements Serializable {
 
     private static final long serialVersionUID = 1374L;
 
+    @PersistenceConstructor
+    public City() {
+    }
+
     @Id
-    @SequenceGenerator(name = "inventory_inventory_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "city_city_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_id")
-    @JsonProperty("inventory_id")
+    @Column(name = "city_id")
+    @JsonProperty("city_id")
     private Integer id;
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(
-        optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "film_id", referencedColumnName = "film_id", nullable = false)
-    @JsonProperty("film")
-    private FilmEntity film;
+    @Column(name = "city", nullable = false)
+    @JsonProperty("city")
+    private String city;
 
     @OneToOne(
         optional = false,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false)
-    @JsonProperty("store")
-    private StoreEntity store;
+    @JoinColumn(name = "country_id", referencedColumnName = "country_id", nullable = false)
+    @JsonProperty("country")
+    private Country country;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

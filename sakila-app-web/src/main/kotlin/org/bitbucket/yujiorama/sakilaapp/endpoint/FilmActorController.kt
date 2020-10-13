@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.City
-import org.bitbucket.yujiorama.sakilaapp.model.CityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.FilmActor
+import org.bitbucket.yujiorama.sakilaapp.model.FilmActorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -11,36 +11,36 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-class CityController(
-        @Autowired private val repository: CityRepository
+class FilmActorController(
+        @Autowired private val repository: FilmActorRepository
 ) {
 
-    @GetMapping("/cities/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<City> {
+    @GetMapping("/filmactors/{id}")
+    fun read(@PathVariable id: Number): ResponseEntity<FilmActor> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @GetMapping("/cities")
-    fun readAll(): List<City> = repository.findAllByOrderByCityAsc()
+    @GetMapping("/filmactors")
+    fun readAll(): List<FilmActor> = repository.findAllByOrderByIdAsc()
 
-    @PostMapping("/cities")
-    fun create(@RequestBody aCity: City): City = repository.save(aCity)
+    @PostMapping("/filmactors")
+    fun create(@RequestBody aFilmActor: FilmActor): FilmActor = repository.save(aFilmActor)
 
-    @PutMapping("/cities/{id}")
-    fun update(@RequestBody aCity: City, @PathVariable id: Number): ResponseEntity<City> {
+    @PutMapping("/filmactors/{id}")
+    fun update(@RequestBody aFilmActor: FilmActor, @PathVariable id: Number): ResponseEntity<FilmActor> {
 
         return repository.findById(id.toInt()).map {
-            val newCityEntity = aCity
+            val newFilmActorEntity = aFilmActor
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
-            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCityEntity))
+            ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newFilmActorEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/cities/{id}")
+    @DeleteMapping("/filmactors/{id}")
     fun delete(@PathVariable id: Number): ResponseEntity<Void> {
 
         return repository.findById(id.toInt()).map {

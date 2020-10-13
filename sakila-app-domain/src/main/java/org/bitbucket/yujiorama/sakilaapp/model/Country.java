@@ -3,7 +3,6 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -12,30 +11,32 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "film_actor")
+@Table(name = "country")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class FilmActorEntity implements Serializable {
+public class Country implements Serializable {
 
     private static final long serialVersionUID = 1374L;
 
+    @PersistenceConstructor
+    public Country() {
+    }
+
     @Id
-    @Column(name = "film_id")
-    @JsonProperty("film_id")
+    @SequenceGenerator(name = "country_country_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "country_id")
+    @JsonProperty("country_id")
     private Integer id;
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(
-        optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "film_id", referencedColumnName = "film_id", nullable = false)
-    @JsonProperty("film")
-    private FilmEntity film;
+    @Column(name = "country", nullable = false)
+    @JsonProperty("country")
+    private String country;
 
     @PrePersist
     void preInsert() {

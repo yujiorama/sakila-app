@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.CategoryEntity
-import org.bitbucket.yujiorama.sakilaapp.model.CategoryEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Category
+import org.bitbucket.yujiorama.sakilaapp.model.CategoryRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class CategoryController(
-        @Autowired private val repository: CategoryEntityRepository
+        @Autowired private val repository: CategoryRepository
 ) {
 
     @GetMapping("/categories/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<CategoryEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Category> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class CategoryController(
     }
 
     @GetMapping("/categories")
-    fun readAll(): List<CategoryEntity> = repository.findAllByOrderByNameAsc()
+    fun readAll(): List<Category> = repository.findAllByOrderByNameAsc()
 
     @PostMapping("/categories")
-    fun create(@RequestBody aCategoryEntity: CategoryEntity): CategoryEntity = repository.save(aCategoryEntity)
+    fun create(@RequestBody aCategory: Category): Category = repository.save(aCategory)
 
     @PutMapping("/categories/{id}")
-    fun update(@RequestBody aCategoryEntity: CategoryEntity, @PathVariable id: Number): ResponseEntity<CategoryEntity> {
+    fun update(@RequestBody aCategory: Category, @PathVariable id: Number): ResponseEntity<Category> {
 
         return repository.findById(id.toInt()).map {
-            val newCategoryEntity = aCategoryEntity
+            val newCategoryEntity = aCategory
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCategoryEntity))

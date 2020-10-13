@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -16,11 +15,14 @@ import java.time.LocalDateTime;
 @Table(name = "staff")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class StaffEntity implements Serializable {
+public class Staff implements Serializable {
 
     private static final long serialVersionUID = 1374L;
+
+    @PersistenceConstructor
+    public Staff() {
+    }
 
     @Id
     @SequenceGenerator(name = "staff_staff_id_seq", allocationSize = 1)
@@ -46,7 +48,7 @@ public class StaffEntity implements Serializable {
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
-    private AddressEntity address;
+    private Address address;
 
     @Column(name = "email")
     @JsonProperty("email")
@@ -58,7 +60,7 @@ public class StaffEntity implements Serializable {
     @JoinColumn(name = "store_id", referencedColumnName = "store_id", unique = true, nullable = false)
     @JsonProperty("store")
     @JsonIgnoreProperties({"manager_staff"})
-    private StoreEntity store;
+    private Store store;
 
     @Column(name = "active", nullable = false)
     @JsonProperty("active")

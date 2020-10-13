@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.PaymentEntity
-import org.bitbucket.yujiorama.sakilaapp.model.PaymentEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Payment
+import org.bitbucket.yujiorama.sakilaapp.model.PaymentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class PaymentController(
-        @Autowired private val repository: PaymentEntityRepository
+        @Autowired private val repository: PaymentRepository
 ) {
 
     @GetMapping("/PaymentEntitys/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<PaymentEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Payment> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class PaymentController(
     }
 
     @GetMapping("/PaymentEntitys")
-    fun readAll(): List<PaymentEntity> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<Payment> = repository.findAllByOrderByIdAsc()
 
     @PostMapping("/PaymentEntitys")
-    fun create(@RequestBody aPaymentEntity: PaymentEntity): PaymentEntity = repository.save(aPaymentEntity)
+    fun create(@RequestBody aPayment: Payment): Payment = repository.save(aPayment)
 
     @PutMapping("/PaymentEntitys/{id}")
-    fun update(@RequestBody aPaymentEntity: PaymentEntity, @PathVariable id: Number): ResponseEntity<PaymentEntity> {
+    fun update(@RequestBody aPayment: Payment, @PathVariable id: Number): ResponseEntity<Payment> {
 
         return repository.findById(id.toInt()).map {
-            val newPaymentEntity = aPaymentEntity
+            val newPaymentEntity = aPayment
                     .withId(id.toInt())
                     .withPaymentDate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newPaymentEntity))

@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.StoreEntity
-import org.bitbucket.yujiorama.sakilaapp.model.StoreEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Store
+import org.bitbucket.yujiorama.sakilaapp.model.StoreRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class StoreController(
-        @Autowired private val repository: StoreEntityRepository
+        @Autowired private val repository: StoreRepository
 ) {
 
     @GetMapping("/StoreEntitys/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<StoreEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Store> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class StoreController(
     }
 
     @GetMapping("/StoreEntitys")
-    fun readAll(): List<StoreEntity> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<Store> = repository.findAllByOrderByIdAsc()
 
     @PostMapping("/StoreEntitys")
-    fun create(@RequestBody aStoreEntity: StoreEntity): StoreEntity = repository.save(aStoreEntity)
+    fun create(@RequestBody aStore: Store): Store = repository.save(aStore)
 
     @PutMapping("/StoreEntitys/{id}")
-    fun update(@RequestBody aStoreEntity: StoreEntity, @PathVariable id: Number): ResponseEntity<StoreEntity> {
+    fun update(@RequestBody aStore: Store, @PathVariable id: Number): ResponseEntity<Store> {
 
         return repository.findById(id.toInt()).map {
-            val newStoreEntity = aStoreEntity
+            val newStoreEntity = aStore
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStoreEntity))

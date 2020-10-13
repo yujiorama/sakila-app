@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.RentalEntity
-import org.bitbucket.yujiorama.sakilaapp.model.RentalEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Rental
+import org.bitbucket.yujiorama.sakilaapp.model.RentalRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class RentalController(
-        @Autowired private val repository: RentalEntityRepository
+        @Autowired private val repository: RentalRepository
 ) {
 
     @GetMapping("/RentalEntitys/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<RentalEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Rental> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class RentalController(
     }
 
     @GetMapping("/RentalEntitys")
-    fun readAll(): List<RentalEntity> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<Rental> = repository.findAllByOrderByIdAsc()
 
     @PostMapping("/RentalEntitys")
-    fun create(@RequestBody aRentalEntity: RentalEntity): RentalEntity = repository.save(aRentalEntity)
+    fun create(@RequestBody aRental: Rental): Rental = repository.save(aRental)
 
     @PutMapping("/RentalEntitys/{id}")
-    fun update(@RequestBody aRentalEntity: RentalEntity, @PathVariable id: Number): ResponseEntity<RentalEntity> {
+    fun update(@RequestBody aRental: Rental, @PathVariable id: Number): ResponseEntity<Rental> {
 
         return repository.findById(id.toInt()).map {
-            val newRentalEntity = aRentalEntity
+            val newRentalEntity = aRental
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newRentalEntity))

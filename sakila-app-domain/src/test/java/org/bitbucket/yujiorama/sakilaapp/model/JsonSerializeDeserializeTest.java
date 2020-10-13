@@ -48,11 +48,11 @@ public class JsonSerializeDeserializeTest {
     public void testSerialize() throws JsonProcessingException {
 
         final var lastUpdate = LocalDateTime.now();
-        final var country = new CountryEntity(1, lastUpdate, "country");
-        final var city = new CityEntity(1, lastUpdate, "city", country);
-        final var address = new AddressEntity(1L, lastUpdate, "address", "address2", city, "101", "010", null);
-        final var store = new StoreEntity(1, lastUpdate, address, null);
-        final var staff = new StaffEntity(1, lastUpdate, "aaa", "bbb", address, "aaa@example.com", store, false, "aaa", "bbb", null);
+        final var country = new Country(1, lastUpdate, "country");
+        final var city = new City(1, lastUpdate, "city", country);
+        final var address = new Address(1L, lastUpdate, "address", "address2", city, "101", "010", null);
+        final var store = new Store(1, lastUpdate, address, null);
+        final var staff = new Staff(1, lastUpdate, "aaa", "bbb", address, "aaa@example.com", store, false, "aaa", "bbb", null);
         store.setManagerStaff(staff);
         final var serialized = this.objectMapper.writeValueAsString(staff);
         Assertions.assertTrue(serialized.length() > 0, "serialized");
@@ -146,7 +146,7 @@ public class JsonSerializeDeserializeTest {
             "  \"picture\": null\n" +
             "}";
 
-        final var deserialized = this.objectMapper.readValue(json, StaffEntity.class);
+        final var deserialized = this.objectMapper.readValue(json, Staff.class);
 
         Assertions.assertEquals(1, deserialized.getId(), "getId");
     }

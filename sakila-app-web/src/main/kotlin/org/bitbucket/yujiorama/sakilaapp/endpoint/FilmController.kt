@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.FilmEntity
-import org.bitbucket.yujiorama.sakilaapp.model.FilmEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Film
+import org.bitbucket.yujiorama.sakilaapp.model.FilmRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class FilmController(
-        @Autowired private val repository: FilmEntityRepository
+        @Autowired private val repository: FilmRepository
 ) {
 
     @GetMapping("/films/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<FilmEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Film> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -24,16 +24,16 @@ class FilmController(
     }
 
     @GetMapping("/films")
-    fun readAll(): List<FilmEntity> = repository.findAllByOrderByTitleAsc()
+    fun readAll(): List<Film> = repository.findAllByOrderByTitleAsc()
 
     @PostMapping("/films")
-    fun create(@RequestBody aFilmEntity: FilmEntity): FilmEntity = repository.save(aFilmEntity)
+    fun create(@RequestBody aFilm: Film): Film = repository.save(aFilm)
 
     @PutMapping("/films/{id}")
-    fun update(@RequestBody aFilmEntity: FilmEntity, @PathVariable id: Number): ResponseEntity<FilmEntity> {
+    fun update(@RequestBody aFilm: Film, @PathVariable id: Number): ResponseEntity<Film> {
 
         return repository.findById(id.toInt()).map {
-            val newFilmEntity = aFilmEntity
+            val newFilmEntity = aFilm
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newFilmEntity))

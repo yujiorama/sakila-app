@@ -1,8 +1,8 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.StaffEntity
-import org.bitbucket.yujiorama.sakilaapp.model.StaffEntityRepository
-import org.bitbucket.yujiorama.sakilaapp.model.StoreEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Staff
+import org.bitbucket.yujiorama.sakilaapp.model.StaffRepository
+import org.bitbucket.yujiorama.sakilaapp.model.StoreRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -13,12 +13,12 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class StaffController(
-        @Autowired private val repository: StaffEntityRepository,
-        @Autowired private val storeRepository: StoreEntityRepository
+        @Autowired private val repository: StaffRepository,
+        @Autowired private val storeRepository: StoreRepository
 ) {
 
     @GetMapping("/staffs/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<StaffEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Staff> {
 
         return repository.findById(id.toInt()).map {
             ResponseEntity.ok(it)
@@ -26,19 +26,19 @@ class StaffController(
     }
 
     @GetMapping("/staffs")
-    fun readAll(): List<StaffEntity> = repository.findAllByOrderByFirstNameAscLastNameAsc()
+    fun readAll(): List<Staff> = repository.findAllByOrderByFirstNameAscLastNameAsc()
 
     @PostMapping("/staffs")
-    fun create(@RequestBody aStaffEntity: StaffEntity): StaffEntity = repository.save(aStaffEntity)
+    fun create(@RequestBody aStaff: Staff): Staff = repository.save(aStaff)
 
     @PutMapping("/staffs/{id}")
-    fun update(@RequestBody aStaffEntity: StaffEntity, @PathVariable id: Number): ResponseEntity<StaffEntity> {
+    fun update(@RequestBody aStaff: Staff, @PathVariable id: Number): ResponseEntity<Staff> {
 
         return repository.findById(id.toInt()).map {
-            val newStaffEntity = aStaffEntity
+            val newStaffEntity = aStaff
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
-                    .withStore(storeRepository.findById(aStaffEntity.store.id).get())
+                    .withStore(storeRepository.findById(aStaff.store.id).get())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStaffEntity))
         }.orElse(ResponseEntity.notFound().build())
     }

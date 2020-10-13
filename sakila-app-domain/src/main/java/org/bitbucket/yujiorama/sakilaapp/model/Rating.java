@@ -3,7 +3,7 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum RatingEnum {
+public enum Rating {
     G("G"),
     PG("PG"),
     PG_13("PG-13"),
@@ -12,7 +12,7 @@ public enum RatingEnum {
 
     private final String label;
 
-    RatingEnum(final String label) {
+    Rating(final String label) {
         this.label = label;
     }
 
@@ -22,8 +22,8 @@ public enum RatingEnum {
     }
 
     @JsonCreator
-    public static RatingEnum of(final String label) {
+    public static Rating of(final String label) {
 
-        return RatingEnum.valueOf(label.replace("-", "_"));
+        return Rating.valueOf(label.replace("-", "_"));
     }
 }

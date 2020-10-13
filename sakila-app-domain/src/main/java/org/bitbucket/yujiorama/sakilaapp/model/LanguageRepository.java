@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface StoreEntityRepository extends CrudRepository<StoreEntity, Integer> {
-    List<StoreEntity> findAllByOrderByIdAsc();
+public interface LanguageRepository extends CrudRepository<Language, Integer> {
+    List<Language> findAllByOrderByNameAsc();
 }

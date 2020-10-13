@@ -3,7 +3,6 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.bitbucket.yujiorama.sakilaapp.impl.RatingConverter;
 import org.hibernate.annotations.Type;
@@ -18,11 +17,14 @@ import java.time.LocalDateTime;
 @Table(name = "film")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class FilmEntity implements Serializable {
+public class Film implements Serializable {
 
     private static final long serialVersionUID = 1374L;
+
+    @PersistenceConstructor
+    public Film() {
+    }
 
     @Id
     @SequenceGenerator(name = "film_film_id_seq", allocationSize = 1)
@@ -40,14 +42,14 @@ public class FilmEntity implements Serializable {
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "language_id", referencedColumnName = "language_id", nullable = false)
     @JsonProperty("language")
-    private LanguageEntity language;
+    private Language language;
 
     @OneToOne(
         optional = true,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "original_language_id", referencedColumnName = "language_id")
     @JsonProperty("original_language")
-    private LanguageEntity originalLanguage;
+    private Language originalLanguage;
 
     @Column(name = "title", nullable = false)
     @JsonProperty("title")
@@ -68,7 +70,7 @@ public class FilmEntity implements Serializable {
     @Column(name = "rating")
     @Convert(converter = RatingConverter.class)
     @JsonProperty("rating")
-    private RatingEnum rating;
+    private Rating rating;
 
     @Column(name = "special_features", nullable = false)
     @JsonProperty("special_features")

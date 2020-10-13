@@ -3,7 +3,6 @@ package org.bitbucket.yujiorama.sakilaapp.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -15,11 +14,14 @@ import java.time.LocalDateTime;
 @Table(name = "customer")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @With
-public class CustomerEntity implements Serializable {
+public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1374L;
+
+    @PersistenceConstructor
+    public Customer() {
+    }
 
     @Id
     @SequenceGenerator(name = "customer_customer_id_seq", allocationSize = 1)
@@ -37,14 +39,14 @@ public class CustomerEntity implements Serializable {
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false)
     @JsonProperty("store")
-    private StoreEntity store;
+    private Store store;
 
     @OneToOne(
         optional = false,
         cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
-    private AddressEntity address;
+    private Address address;
 
     @Column(name = "first_name", nullable = false)
     @JsonProperty("first_name")

@@ -1,7 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
-import org.bitbucket.yujiorama.sakilaapp.model.AddressEntity
-import org.bitbucket.yujiorama.sakilaapp.model.AddressEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.Address
+import org.bitbucket.yujiorama.sakilaapp.model.AddressRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,11 +12,11 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class AddressController(
-        @Autowired private val repository: AddressEntityRepository
+        @Autowired private val repository: AddressRepository
 ) {
 
     @GetMapping("/addresses/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<AddressEntity> {
+    fun read(@PathVariable id: Number): ResponseEntity<Address> {
 
         return repository.findById(id.toLong()).map {
             ResponseEntity.ok(it)
@@ -24,13 +24,13 @@ class AddressController(
     }
 
     @GetMapping("/addresses")
-    fun readAll(): List<AddressEntity> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<Address> = repository.findAllByOrderByIdAsc()
 
     @PostMapping("/addresses")
-    fun create(@RequestBody aAddress: AddressEntity): AddressEntity = repository.save(aAddress)
+    fun create(@RequestBody aAddress: Address): Address = repository.save(aAddress)
 
     @PutMapping("/addresses/{id}")
-    fun update(@RequestBody aAddress: AddressEntity, @PathVariable id: Number): ResponseEntity<AddressEntity> {
+    fun update(@RequestBody aAddress: Address, @PathVariable id: Number): ResponseEntity<Address> {
 
         return repository.findById(id.toLong()).map {
             val newAddress = aAddress

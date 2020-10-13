@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface AddressEntityRepository extends CrudRepository<AddressEntity, Long> {
+public interface AddressRepository extends CrudRepository<Address, Long> {
 
-    List<AddressEntity> findAllByOrderByIdAsc();
+    List<Address> findAllByOrderByIdAsc();
 }
