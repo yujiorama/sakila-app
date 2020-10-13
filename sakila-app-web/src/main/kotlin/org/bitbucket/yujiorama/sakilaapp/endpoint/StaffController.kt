@@ -2,6 +2,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 
 import org.bitbucket.yujiorama.sakilaapp.model.StaffEntity
 import org.bitbucket.yujiorama.sakilaapp.model.StaffEntityRepository
+import org.bitbucket.yujiorama.sakilaapp.model.StoreEntityRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class StaffController(
-        @Autowired private val repository: StaffEntityRepository
+        @Autowired private val repository: StaffEntityRepository,
+        @Autowired private val storeRepository: StoreEntityRepository
 ) {
 
     @GetMapping("/staffs/{id}")
@@ -36,6 +38,7 @@ class StaffController(
             val newStaffEntity = aStaffEntity
                     .withId(id.toInt())
                     .withLastUpdate(LocalDateTime.now())
+                    .withStore(storeRepository.findById(aStaffEntity.store.id).get())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStaffEntity))
         }.orElse(ResponseEntity.notFound().build())
     }

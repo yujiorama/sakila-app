@@ -156,7 +156,7 @@ class SakillaIntegrationTest(
         Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
         val staff = res.body!!
         Assertions.assertEquals(1, staff.id)
-        Assertions.assertEquals(pictureBytes, staff.picture)
+        Assertions.assertEquals(pictureBytes.toList(), staff.picture.toList())
     }
 
     @Test
