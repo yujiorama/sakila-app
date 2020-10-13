@@ -22,7 +22,8 @@ public class CityEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "city_city_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "city_id")
     @JsonProperty("city_id")
     private Integer id;
@@ -35,8 +36,18 @@ public class CityEntity implements Serializable {
     @JsonProperty("city")
     private String city;
 
-    @OneToOne(optional = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "country_id", referencedColumnName = "country_id", nullable = false)
     @JsonProperty("country")
     private CountryEntity country;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

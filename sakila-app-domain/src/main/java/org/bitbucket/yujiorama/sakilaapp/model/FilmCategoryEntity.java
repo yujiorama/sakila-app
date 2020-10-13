@@ -22,7 +22,6 @@ public class FilmCategoryEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "film_id")
     @JsonProperty("film_id")
     private Integer id;
@@ -31,8 +30,18 @@ public class FilmCategoryEntity implements Serializable {
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "category_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
     @JsonProperty("category")
     private CategoryEntity category;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

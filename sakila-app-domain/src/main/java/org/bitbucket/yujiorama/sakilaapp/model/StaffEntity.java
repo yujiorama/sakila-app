@@ -23,7 +23,8 @@ public class StaffEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "staff_staff_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
     @JsonProperty("staff_id")
     private Integer id;
@@ -40,8 +41,10 @@ public class StaffEntity implements Serializable {
     @JsonProperty("last_name")
     private String lastName;
 
-    @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false, unique = true)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
     private AddressEntity address;
 
@@ -49,8 +52,10 @@ public class StaffEntity implements Serializable {
     @JsonProperty("email")
     private String email;
 
-    @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false, unique = true)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id", unique = true, nullable = false)
     @JsonProperty("store")
     @JsonIgnoreProperties({"manager_staff"})
     private StoreEntity store;
@@ -70,4 +75,12 @@ public class StaffEntity implements Serializable {
     @Column(name = "picture")
     @JsonProperty("picture")
     private byte[] picture;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

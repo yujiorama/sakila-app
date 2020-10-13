@@ -22,7 +22,8 @@ public class CategoryEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "category_category_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     @JsonProperty("category_id")
     private Integer id;
@@ -34,4 +35,12 @@ public class CategoryEntity implements Serializable {
     @Column(name = "name", nullable = false)
     @JsonProperty("name")
     private String name;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

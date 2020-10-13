@@ -25,7 +25,8 @@ public class FilmEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "film_film_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "film_id")
     @JsonProperty("film_id")
     private Integer id;
@@ -34,31 +35,23 @@ public class FilmEntity implements Serializable {
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "title", nullable = false)
-    @JsonProperty("title")
-    private String title;
-
-    @Column(name = "description")
-    @JsonProperty("description")
-    private String description;
-
-    @Column(name = "release_year")
-    @JsonProperty("release_year")
-    private Integer releaseYear;
-
-    @OneToOne(optional = false)
-    @JoinColumn(name = "language_id", unique = true, nullable = false, insertable = false, updatable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "language_id", referencedColumnName = "language_id", nullable = false)
     @JsonProperty("language")
     private LanguageEntity language;
 
-    @OneToOne
-    @JoinColumn(name = "language_id", unique = true, nullable = false, insertable = false, updatable = false)
+    @OneToOne(
+        optional = true,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "original_language_id", referencedColumnName = "language_id")
     @JsonProperty("original_language")
     private LanguageEntity originalLanguage;
 
-    @Column(name = "length")
-    @JsonProperty("length")
-    private Integer length;
+    @Column(name = "title", nullable = false)
+    @JsonProperty("title")
+    private String title;
 
     @Column(name = "rental_duration", nullable = false)
     @JsonProperty("rental_duration")
@@ -85,4 +78,24 @@ public class FilmEntity implements Serializable {
     @Column(name = "fulltext", nullable = false)
     @JsonProperty("fulltext")
     private String fulltext;
+
+    @Column(name = "description")
+    @JsonProperty("description")
+    private String description;
+
+    @Column(name = "release_year")
+    @JsonProperty("release_year")
+    private Integer releaseYear;
+
+    @Column(name = "length")
+    @JsonProperty("length")
+    private Integer length;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

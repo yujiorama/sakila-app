@@ -22,7 +22,8 @@ public class StoreEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "store_store_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
     @JsonProperty("store_id")
     private Integer id;
@@ -31,13 +32,25 @@ public class StoreEntity implements Serializable {
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
     private AddressEntity address;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "manager_staff_id", referencedColumnName = "staff_id", unique = true, nullable = false)
     @JsonProperty("manager_staff")
     private StaffEntity managerStaff;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

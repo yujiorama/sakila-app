@@ -22,7 +22,8 @@ public class ActorEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "actor_actor_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "actor_id")
     @JsonProperty("actor_id")
     private Long id;
@@ -38,4 +39,12 @@ public class ActorEntity implements Serializable {
     @Column(name = "last_name", nullable = false)
     @JsonProperty("last_name")
     private String lastName;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

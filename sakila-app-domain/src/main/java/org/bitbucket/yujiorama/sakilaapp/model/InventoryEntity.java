@@ -22,7 +22,8 @@ public class InventoryEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "inventory_inventory_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inventory_id")
     @JsonProperty("inventory_id")
     private Integer id;
@@ -31,13 +32,17 @@ public class InventoryEntity implements Serializable {
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "film_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "film_id", referencedColumnName = "film_id", nullable = false)
     @JsonProperty("film")
     private FilmEntity film;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "store_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false)
     @JsonProperty("store")
     private StoreEntity store;
 }

@@ -22,7 +22,8 @@ public class CustomerEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "customer_customer_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     @JsonProperty("customer_id")
     private Integer id;
@@ -31,10 +32,19 @@ public class CustomerEntity implements Serializable {
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "store_id", unique = true, nullable = false, updatable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false)
     @JsonProperty("store")
     private StoreEntity store;
+
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
+    @JsonProperty("address")
+    private AddressEntity address;
 
     @Column(name = "first_name", nullable = false)
     @JsonProperty("first_name")
@@ -44,15 +54,6 @@ public class CustomerEntity implements Serializable {
     @JsonProperty("last_name")
     private String lastName;
 
-    @Column(name = "email")
-    @JsonProperty("email")
-    private String email;
-
-    @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
-    @JsonProperty("address")
-    private AddressEntity address;
-
     @Column(name = "activebool", nullable = false)
     @JsonProperty("activebool")
     private Boolean activebool;
@@ -61,7 +62,19 @@ public class CustomerEntity implements Serializable {
     @JsonProperty("create_date")
     private LocalDateTime createDate;
 
+    @Column(name = "email")
+    @JsonProperty("email")
+    private String email;
+
     @Column(name = "active")
     @JsonProperty("active")
     private Integer active;
+
+    @PrePersist
+    void preInsert() {
+
+        if (this.lastUpdate == null) {
+            this.lastUpdate = LocalDateTime.now();
+        }
+    }
 }

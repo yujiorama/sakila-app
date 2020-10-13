@@ -23,7 +23,8 @@ public class PaymentEntity implements Serializable {
     private static final long serialVersionUID = 1374L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "payment_payment_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
     @JsonProperty("payment_id")
     private Integer id;
@@ -32,18 +33,24 @@ public class PaymentEntity implements Serializable {
     @JsonProperty("payment_date")
     private LocalDateTime paymentDate;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "customer_id", unique = true, nullable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
     @JsonProperty("customer")
     private CustomerEntity customer;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "staff_id", unique = true, nullable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", nullable = false)
     @JsonProperty("staff")
     private StaffEntity staff;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "rental_id", unique = true, nullable = false)
+    @OneToOne(
+        optional = false,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "rental_id", referencedColumnName = "rental_id", nullable = false)
     @JsonProperty("rental")
     private RentalEntity rental;
 
