@@ -1,5 +1,24 @@
+plugins {
+    id 'org.flywaydb.flyway' version '7.0.2'
+}
+
 dependencies {
     implementation(project(':sakila-app-domain'))
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
+}
+
+flyway {
+    workingDirectory = project.projectDir.absolutePath
+    locations = ['filesystem:src/main/resources/db/migration']
+    placeholders = [
+        'DB_USER'    : System.properties.getOrDefault('flyway.user',
+            project.properties.getOrDefault('flyway.user', 'sakila')),
+        'DB_PASSWORD': System.properties.getOrDefault('flyway.password',
+            project.properties.getOrDefault('flyway.password', 'sakila')),
+    ]
+}
+
+bootBuildImage {
+    imageName = "${project.name}:${project.version}"
 }
