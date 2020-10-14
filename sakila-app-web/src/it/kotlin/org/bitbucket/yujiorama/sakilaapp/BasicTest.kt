@@ -7,47 +7,22 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.getForEntity
-import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.util.LinkedMultiValueMap
-import org.testcontainers.containers.PostgreSQLContainerProvider
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
-        initializers = [SakillaIntegrationTest.TestDatabaseInitializer::class]
+    initializers = [TestDatabaseInitializer::class]
 )
-class SakillaIntegrationTest(
-        @Autowired private val restTemplate: TestRestTemplate
+class BasicTest(
+    @Autowired private val restTemplate: TestRestTemplate
 ) {
-    class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
-        override fun initialize(applicationContext: ConfigurableApplicationContext) {
-
-            database.start()
-            TestPropertyValues.of(
-                    "spring.datasource.url=${database.jdbcUrl}",
-                    "spring.datasource.username=${database.username}",
-                    "spring.datasource.password=${database.password}",
-                    "spring.flyway.placeholders.DB_USER=${database.username}",
-                    "spring.flyway.placeholders.DB_PASSWORD=${database.password}"
-            ).applyTo(applicationContext.environment)
-        }
-
-        companion object {
-            val database = PostgreSQLContainerProvider()
-                    .newInstance("13-alpine")
-                    .withDatabaseName("sakila")
-                    .withUsername("postgres")
-                    .withPassword("postgres")
-        }
-    }
 
     @BeforeAll
     fun setup() {
@@ -58,7 +33,6 @@ class SakillaIntegrationTest(
     fun teardown() {
         println(">> teardown")
     }
-
 
     @Test
     fun `test countries`() {
