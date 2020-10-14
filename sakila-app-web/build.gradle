@@ -6,6 +6,8 @@ dependencies {
     implementation(project(':sakila-app-domain'))
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
+    testImplementation("com.intuit.karate:karate-junit5:${karateVersion}")
+    testImplementation("com.intuit.karate:karate-apache:${karateVersion}")
 }
 
 flyway {
@@ -20,5 +22,5 @@ flyway {
 }
 
 bootBuildImage {
-    imageName = "${project.name}:${project.version}"
+    imageName = "example.com/${project.name}:${project.version}"
 }
