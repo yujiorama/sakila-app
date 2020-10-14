@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    networks:
+      - internal
+    expose:
+      - 5432/tcp
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /var/lib/postgresql/data
+  webapp:
+    image: example.com/sakila-app-web:0.0.1-SNAPSHOT
+    #    build:
+    #      context: ../
+    #      dockerfile: testing/Dockerfile
+    networks:
+      - internal
+    depends_on:
+      - db
+    expose:
+      - ${WEBAPP_PORT}/tcp
+    ports:
+      - ${WEBAPP_PORT}:${WEBAPP_PORT}
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SERVER_PORT: ${WEBAPP_PORT}
+      BPL_SPRING_CLOUD_BINDINGS_ENABLED: "false"
+      JAVA_OPTS: "-XX:+FlightRecorder -XX:StartFlightRecording=duration=10s,filename=/home/cnb/sakila-app.jfr"
+  migration:
+    build:
+      context: ../
+      dockerfile: testing/Dockerfile
+    networks:
+      - internal
+    depends_on:
+      - db
+    environment: [ ]
+    command:
+      - ./gradlew
+      - --no-daemon
+      - -i
+      - sakila-app-web:flywayMigrate
+      - -Pflyway.url=jdbc:postgresql://db:5432/${DB_NAME}
+      - -Pflyway.user=${DB_USER}
+      - -Pflyway.password=${DB_PASSWORD}
+  testing:
+    build:
+      context: ../
+      dockerfile: testing/Dockerfile
+    networks:
+      - internal
+    depends_on:
+      - db
+      - webapp
+    environment: [ ]
+    command:
+      - ./gradlew
+      - --no-daemon
+      - sakila-app-web:performanceTest
+      - --tests
+      - sakila.PerformanceTest.all
+      - -Papp.url=http://webapp:${WEBAPP_PORT}/
+      - -Pkarate.options="--tags ~@ignore"
+      - -Pkarate.env=docker
+
+networks:
+  internal:

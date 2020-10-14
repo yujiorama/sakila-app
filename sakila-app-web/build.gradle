@@ -2,6 +2,75 @@ plugins {
     id 'org.flywaydb.flyway' version '7.0.2'
 }
 
+ext['karateVersion'] = '0.9.6'
+
+sourceSets {
+    performanceTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+
+        java {
+            srcDirs('src/perf/java')
+        }
+
+        kotlin {
+            srcDirs('src/perf/kotlin')
+        }
+
+        //noinspection GroovyAssignabilityCheck
+        resources {
+            srcDirs('src/perf/resources')
+            exclude '**/*.java', '**/*.kt'
+        }
+    }
+}
+
+configurations {
+    performanceTestImplementation {
+        extendsFrom testImplementation
+    }
+
+    performanceTestRuntimeOnly {
+        extendsFrom testRuntimeOnly
+    }
+}
+
+task performanceTest(type: Test) {
+    group = 'verification'
+
+    testClassesDirs = sourceSets.performanceTest.output.classesDirs
+    classpath = sourceSets.performanceTest.runtimeClasspath
+
+    useJUnitPlatform()
+
+    systemProperty 'karate.options', System.properties.getOrDefault('karate.options',
+        project.properties.getOrDefault('karate.options', '--tags ~@ignore'))
+    systemProperty 'karate.env', System.properties.getOrDefault('karate.env',
+        project.properties.getOrDefault('karate.env', 'dev'))
+    systemProperty 'app.url', System.properties.getOrDefault('app.url',
+        project.properties.getOrDefault('app.url', 'http://localhost:8080'))
+
+    testLogging {
+        events 'failed',
+            'passed',
+            'skipped',
+            'standard_error',
+            'standard_out'
+        exceptionFormat 'full'
+        showCauses true
+        showExceptions true
+        showStackTraces true
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    outputs.upToDateWhen { false }
+}
+
+task karateDebug(type: JavaExec) {
+    classpath = sourceSets.performanceTest.runtimeClasspath
+    main = 'com.intuit.karate.cli.Main'
+}
+
 dependencies {
     implementation(project(':sakila-app-domain'))
     implementation('org.springframework.boot:spring-boot-starter-web')
