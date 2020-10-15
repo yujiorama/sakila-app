@@ -1,0 +1,13 @@
+{
+  "staff_id": "#number",
+  "first_name": "#string",
+  "last_name": "#string",
+  "address": "#object",
+  "email": "##string",
+  "store": "#object",
+  "active": "#boolean",
+  "username": "#string",
+  "password": "##string",
+  "picture": "##object",
+  "last_update": "#notnull"
+}

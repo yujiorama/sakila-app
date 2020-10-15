@@ -1,0 +1,15 @@
+{
+  "film_id": "#number",
+  "title": "#string",
+  "rental_duration": "#number",
+  "rental_rate": "#number",
+  "replacement_cost": "#number",
+  "rating": "#string",
+  "description": "##string",
+  "release_year": "##number",
+  "length": "##number",
+  "last_update": "#notnull",
+  "language": "#object",
+  "original_language": "##object",
+  "special_features": "#array"
+}

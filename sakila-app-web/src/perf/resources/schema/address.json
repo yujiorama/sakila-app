@@ -1,0 +1,10 @@
+{
+  "address_id": "#number",
+  "address": "#string",
+  "district": "#string",
+  "city": "#object",
+  "phone": "#string",
+  "address2": "##string",
+  "postal_code": "##string",
+  "last_update": "#notnull"
+}

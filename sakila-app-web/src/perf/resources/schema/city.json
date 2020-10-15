@@ -1,0 +1,6 @@
+{
+  "city_id": "#number",
+  "city": "#string",
+  "country": "#object",
+  "last_update": "#notnull"
+}

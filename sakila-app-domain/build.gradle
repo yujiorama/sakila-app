@@ -6,7 +6,9 @@ dependencies {
     api('org.springframework.boot:spring-boot-starter-data-jpa')
     api('org.postgresql:postgresql')
     implementation('org.flywaydb:flyway-core')
-    testImplementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    implementation('com.vladmihalcea:hibernate-types-52:2.10.0')
+    implementation('com.kjetland:mbknor-jackson-jsonschema_2.13:1.0.39')
+    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 }
 
 // disable spring-boot app configuration

@@ -1,0 +1,6 @@
+{
+  "inventory_id": "#number",
+  "film": "#object",
+  "store": "#object",
+  "last_update": "#notnull"
+}

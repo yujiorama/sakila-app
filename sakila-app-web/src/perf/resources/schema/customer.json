@@ -1,0 +1,12 @@
+{
+  "customer_id": "#number",
+  "store": "#object",
+  "address": "#object",
+  "first_name": "#string",
+  "last_name": "#string",
+  "activebool": "#boolean",
+  "create_date": "#notnull",
+  "email": "##string",
+  "active": "##number",
+  "last_update": "#notnull"
+}

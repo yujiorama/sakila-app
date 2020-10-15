@@ -1,0 +1,8 @@
+{
+  "payment_id": "#number",
+  "payment_date": "#notnull",
+  "customer": "#object",
+  "staff": "#object",
+  "rental": "#object",
+  "amount": "#number"
+}

@@ -1,0 +1,6 @@
+{
+  "store_id": "#number",
+  "last_update": "#notnull",
+  "address": "#object",
+  "manager_staff": "##object"
+}

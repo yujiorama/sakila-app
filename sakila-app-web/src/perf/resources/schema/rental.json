@@ -1,0 +1,8 @@
+{
+  "rental_id": "#number",
+  "inventory": "#object",
+  "customer": "#object",
+  "staff": "#object",
+  "return_date": "#notnull",
+  "last_update": "#notnull"
+}

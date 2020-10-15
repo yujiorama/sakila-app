@@ -77,6 +77,8 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-actuator')
     testImplementation("com.intuit.karate:karate-junit5:${karateVersion}")
     testImplementation("com.intuit.karate:karate-apache:${karateVersion}")
+    testImplementation('com.kjetland:mbknor-jackson-jsonschema_2.13:1.0.39')
+    testImplementation('com.github.fge:json-schema-validator:2.2.6')
 }
 
 flyway {

@@ -1,0 +1,5 @@
+{
+  "country_id": "#number",
+  "country": "#string",
+  "last_update": "#notnull"
+}
