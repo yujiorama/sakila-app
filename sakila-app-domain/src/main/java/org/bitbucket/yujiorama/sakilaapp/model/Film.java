@@ -1,11 +1,14 @@
 package org.bitbucket.yujiorama.sakilaapp.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.With;
-import org.bitbucket.yujiorama.sakilaapp.impl.RatingConverter;
+import org.bitbucket.yujiorama.sakilaapp.impl.RatingEnumType;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
@@ -15,6 +18,17 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "film")
+@TypeDefs({
+    @TypeDef(
+        name = "string-array",
+        typeClass = StringArrayType.class,
+        defaultForType = String[].class
+    ),
+    @TypeDef(
+        name = "mpaa_rating",
+        typeClass = RatingEnumType.class
+    )
+})
 @Data
 @AllArgsConstructor
 @With
@@ -69,18 +83,14 @@ public class Film implements Serializable {
     private BigDecimal replacementCost;
 
     @Column(name = "rating")
-    @Convert(converter = RatingConverter.class)
+    @Type(type = "mpaa_rating")
     @JsonProperty("rating")
     private Rating rating;
 
-    @Column(name = "special_features", nullable = false)
+    @Column(name = "special_features", nullable = false, columnDefinition = "text[]")
     @JsonProperty("special_features")
-    @Type(type = "org.bitbucket.yujiorama.sakilaapp.impl.GenericArrayUserType")
+    @Type(type = "string-array")
     private String[] specialFeatures;
-
-    @Column(name = "fulltext", nullable = false)
-    @JsonProperty("fulltext")
-    private String fulltext;
 
     @Column(name = "description")
     @JsonProperty("description")
