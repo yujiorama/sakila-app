@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "film_actor")
+@IdClass(FilmActorId.class)
 @Data
 @AllArgsConstructor
 @With
@@ -24,14 +25,15 @@ public class FilmActor implements Serializable {
     }
 
     @Id
-    @Column(name = "film_id")
-    @JsonProperty("film_id")
-    private Integer id;
+    @Column(name = "actor_id")
+    @JsonProperty("actor_id")
+    private Integer actorId;
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
     private LocalDateTime lastUpdate;
 
+    @Id
     @OneToOne(
         optional = false,
         cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})

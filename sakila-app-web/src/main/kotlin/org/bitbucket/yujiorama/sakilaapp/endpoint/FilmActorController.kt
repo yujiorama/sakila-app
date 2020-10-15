@@ -1,6 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.endpoint
 
 import org.bitbucket.yujiorama.sakilaapp.model.FilmActor
+import org.bitbucket.yujiorama.sakilaapp.model.FilmActorId
 import org.bitbucket.yujiorama.sakilaapp.model.FilmActorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -15,35 +16,34 @@ class FilmActorController(
         @Autowired private val repository: FilmActorRepository
 ) {
 
-    @GetMapping("/filmactors/{id}")
-    fun read(@PathVariable id: Number): ResponseEntity<FilmActor> {
+    @GetMapping("/filmactors/{actorId}/{filmId}")
+    fun read(@PathVariable actorId: Number, @PathVariable filmId: Number): ResponseEntity<FilmActor> {
 
-        return repository.findById(id.toInt()).map {
+        return repository.findById(FilmActorId(actorId.toInt(), filmId.toInt())).map {
             ResponseEntity.ok(it)
         }.orElse(ResponseEntity.notFound().build())
     }
 
     @GetMapping("/filmactors")
-    fun readAll(): List<FilmActor> = repository.findAllByOrderByIdAsc()
+    fun readAll(): List<FilmActor> = repository.findAllByOrderByActorIdAscFilmAsc()
 
     @PostMapping("/filmactors")
     fun create(@RequestBody aFilmActor: FilmActor): FilmActor = repository.save(aFilmActor)
 
-    @PutMapping("/filmactors/{id}")
-    fun update(@RequestBody aFilmActor: FilmActor, @PathVariable id: Number): ResponseEntity<FilmActor> {
+    @PutMapping("/filmactors/{actorId}/{filmId}")
+    fun update(@RequestBody aFilmActor: FilmActor, @PathVariable actorId: Number, @PathVariable filmId: Number): ResponseEntity<FilmActor> {
 
-        return repository.findById(id.toInt()).map {
+        return repository.findById(FilmActorId(actorId.toInt(), filmId.toInt())).map {
             val newFilmActorEntity = aFilmActor
-                    .withId(id.toInt())
-                    .withLastUpdate(LocalDateTime.now())
+                .withLastUpdate(LocalDateTime.now())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newFilmActorEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
 
-    @DeleteMapping("/filmactors/{id}")
-    fun delete(@PathVariable id: Number): ResponseEntity<Void> {
+    @DeleteMapping("/filmactors/{actorId}/{filmId}")
+    fun delete(@PathVariable actorId: Number, @PathVariable filmId: Number): ResponseEntity<Void> {
 
-        return repository.findById(id.toInt()).map {
+        return repository.findById(FilmActorId(actorId.toInt(), filmId.toInt())).map {
             repository.delete(it)
             ResponseEntity.noContent().build<Void>()
         }.orElse(ResponseEntity.notFound().build())
