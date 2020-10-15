@@ -44,7 +44,7 @@ public class Address implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "city_id", referencedColumnName = "city_id", nullable = false)
     @JsonProperty("city")
     private City city;

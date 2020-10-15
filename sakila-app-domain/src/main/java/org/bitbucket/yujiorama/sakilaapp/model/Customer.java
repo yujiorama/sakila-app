@@ -36,14 +36,14 @@ public class Customer implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "store_id", referencedColumnName = "store_id", nullable = false)
     @JsonProperty("store")
     private Store store;
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     @JsonProperty("address")
     private Address address;

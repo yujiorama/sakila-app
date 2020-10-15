@@ -34,7 +34,7 @@ public class FilmActor implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "film_id", referencedColumnName = "film_id", nullable = false)
     @JsonProperty("film")
     private Film film;

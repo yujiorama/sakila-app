@@ -39,14 +39,15 @@ public class Film implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "language_id", referencedColumnName = "language_id", nullable = false)
     @JsonProperty("language")
     private Language language;
 
+    @SuppressWarnings("DefaultAnnotationParam")
     @OneToOne(
         optional = true,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "original_language_id", referencedColumnName = "language_id")
     @JsonProperty("original_language")
     private Language originalLanguage;

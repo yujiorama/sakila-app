@@ -34,7 +34,7 @@ public class FilmCategory implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
     @JsonProperty("category")
     private Category category;

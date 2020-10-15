@@ -40,7 +40,7 @@ public class City implements Serializable {
 
     @OneToOne(
         optional = false,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+        cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "country_id", referencedColumnName = "country_id", nullable = false)
     @JsonProperty("country")
     private Country country;
