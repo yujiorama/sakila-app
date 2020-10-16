@@ -1,4 +1,4 @@
-package sakila
+package org.bitbucket.yujiorama.sakilaapp
 
 import com.intuit.karate.Runner
 import com.intuit.karate.junit5.Karate
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class PerformanceTest {
+class ExternalTest {
 
     @Karate.Test
     fun `sample`(): Karate = Karate.run("classpath:sample.feature")

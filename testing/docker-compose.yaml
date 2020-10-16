@@ -65,9 +65,9 @@ services:
     command:
       - ./gradlew
       - --no-daemon
-      - sakila-app-web:performanceTest
+      - sakila-app-web:integrationTest
       - --tests
-      - sakila.PerformanceTest.all
+      - org.bitbucket.yujiorama.sakilaapp.ExternalTest.all
       - -Papp.url=http://webapp:${WEBAPP_PORT}/
       - -Pkarate.options="--tags ~@ignore"
       - -Pkarate.env=docker

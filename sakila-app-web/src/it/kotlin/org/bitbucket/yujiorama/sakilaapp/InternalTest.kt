@@ -20,7 +20,7 @@ import org.springframework.util.LinkedMultiValueMap
 @ContextConfiguration(
     initializers = [TestDatabaseInitializer::class]
 )
-class BasicTest(
+class InternalTest(
     @Autowired private val restTemplate: TestRestTemplate
 ) {
 

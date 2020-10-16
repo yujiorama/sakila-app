@@ -14,7 +14,9 @@ class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplic
             "spring.datasource.username=${database.username}",
             "spring.datasource.password=${database.password}",
             "spring.flyway.placeholders.DB_USER=${database.username}",
-            "spring.flyway.placeholders.DB_PASSWORD=${database.password}"
+            "spring.flyway.placeholders.DB_PASSWORD=${database.password}",
+            "spring.flyway.enabled=true",
+            "spring.flyway.locations=filesystem:src/main/resources/db/migration"
         ).applyTo(applicationContext.environment)
     }
 
