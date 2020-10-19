@@ -9,14 +9,14 @@ import java.util.*
 class ExternalTest {
 
     @Karate.Test
-    fun `sample`(): Karate = Karate.run("classpath:sample.feature")
+    fun `sample`(): Karate = Karate.run("classpath:feature/sample.feature")
 
     @Test
     fun `tags`() {
 
         val tags = Optional.ofNullable(System.getProperty("tags")).orElse("~@ignore")
         val result = Runner
-            .path("classpath:sakila")
+            .path("classpath:feature/sakila")
             .tags(tags.split(","))
             .parallel(10)
         Assertions.assertEquals(0, result.failCount, result.errorMessages)
@@ -26,7 +26,7 @@ class ExternalTest {
     fun `all`() {
 
         val result = Runner
-            .path("classpath:sakila")
+            .path("classpath:feature/sakila")
             .parallel(10)
         Assertions.assertEquals(0, result.failCount, result.errorMessages)
     }

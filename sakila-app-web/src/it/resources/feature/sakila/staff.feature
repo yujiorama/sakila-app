@@ -3,9 +3,9 @@ Feature: staff
   Background:
     * url appUrl + '/staffs'
     * def schema = {}
-    * set schema.staff = read('schema/staff.json')
-    * set schema.address = read('schema/address.json')
-    * set schema.store = read('schema/store.json')
+    * set schema.staff = read('schema/sakila/staff.json')
+    * set schema.address = read('schema/sakila/address.json')
+    * set schema.store = read('schema/sakila/store.json')
 
   @read
   Scenario: read(found)

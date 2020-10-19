@@ -3,9 +3,9 @@ Feature: inventory
   Background:
     * url appUrl + '/inventories'
     * def schema = {}
-    * set schema.inventory = read('schema/inventory.json')
-    * set schema.film = read('schema/film.json')
-    * set schema.store = read('schema/store.json')
+    * set schema.inventory = read('schema/sakila/inventory.json')
+    * set schema.film = read('schema/sakila/film.json')
+    * set schema.store = read('schema/sakila/store.json')
 
   @read
   Scenario: read(found)

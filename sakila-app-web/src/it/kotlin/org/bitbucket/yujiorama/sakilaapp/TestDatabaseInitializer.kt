@@ -23,7 +23,7 @@ class TestDatabaseInitializer : ApplicationContextInitializer<ConfigurableApplic
     companion object {
         val database = PostgreSQLContainerProvider()
             .newInstance("13-alpine")
-            .withDatabaseName("sakila")
+            .withDatabaseName("feature/sakila")
             .withUsername("postgres")
             .withPassword("postgres")
     }

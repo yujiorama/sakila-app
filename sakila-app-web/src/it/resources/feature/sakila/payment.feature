@@ -3,10 +3,10 @@ Feature: payment
   Background:
     * url appUrl + '/payments'
     * def schema = {}
-    * set schema.payment = read('schema/payment.json')
-    * set schema.customer = read('schema/customer.json')
-    * set schema.staff = read('schema/staff.json')
-    * set schema.rental = read('schema/rental.json')
+    * set schema.payment = read('schema/sakila/payment.json')
+    * set schema.customer = read('schema/sakila/customer.json')
+    * set schema.staff = read('schema/sakila/staff.json')
+    * set schema.rental = read('schema/sakila/rental.json')
 
   @read
   Scenario: read(found)

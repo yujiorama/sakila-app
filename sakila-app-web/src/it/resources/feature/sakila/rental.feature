@@ -3,10 +3,10 @@ Feature: rental
   Background:
     * url appUrl + '/rentals'
     * def schema = {}
-    * set schema.rental = read('schema/rental.json')
-    * set schema.customer = read('schema/customer.json')
-    * set schema.staff = read('schema/staff.json')
-    * set schema.inventory = read('schema/inventory.json')
+    * set schema.rental = read('schema/sakila/rental.json')
+    * set schema.customer = read('schema/sakila/customer.json')
+    * set schema.staff = read('schema/sakila/staff.json')
+    * set schema.inventory = read('schema/sakila/inventory.json')
 
   @read
   Scenario: read(found)
