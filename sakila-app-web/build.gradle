@@ -1,20 +1,16 @@
 plugins {
+    id 'scala'
     id 'org.flywaydb.flyway' version '7.0.2'
 }
 
-ext['karateVersion'] = '0.9.6'
+sourceSets.integrationTest {
 
-(project.tasks.getByName('integrationTest') as Test).with {
-
-    it.systemProperty 'karate.options', System.properties.getOrDefault('karate.options',
-        project.properties.getOrDefault('karate.options', '--tags ~@ignore'))
-    it.systemProperty 'karate.env', System.properties.getOrDefault('karate.env',
-        project.properties.getOrDefault('karate.env', 'dev'))
-    it.systemProperty 'app.url', System.properties.getOrDefault('app.url',
-        project.properties.getOrDefault('app.url', 'http://localhost:8080'))
-    //noinspection GroovyAssignabilityCheck
-    it.outputs.upToDateWhen { false }
+    scala {
+        srcDirs('src/it/scala')
+    }
 }
+
+ext['karateVersion'] = '0.9.6'
 
 dependencies {
     implementation(project(':sakila-app-domain'))
@@ -22,8 +18,10 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-actuator')
     testImplementation("com.intuit.karate:karate-junit5:${karateVersion}")
     testImplementation("com.intuit.karate:karate-apache:${karateVersion}")
-    testImplementation('com.kjetland:mbknor-jackson-jsonschema_2.13:1.0.39')
+    testImplementation("com.intuit.karate:karate-gatling:${karateVersion}")
+    testImplementation('com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.39')
     testImplementation('com.github.fge:json-schema-validator:2.2.6')
+    testImplementation('org.scala-lang:scala-library:2.12.3')
 }
 
 flyway {
@@ -39,4 +37,38 @@ flyway {
 
 bootBuildImage {
     imageName = "example.com/${project.name}:${project.version}"
+}
+
+(project.tasks.getByName('integrationTest') as Test).with {
+
+    it.systemProperty 'karate.options', System.properties.getOrDefault('karate.options',
+        project.properties.getOrDefault('karate.options', '--tags ~@ignore'))
+    it.systemProperty 'karate.env', System.properties.getOrDefault('karate.env',
+        project.properties.getOrDefault('karate.env', 'dev'))
+    it.systemProperty 'app.url', System.properties.getOrDefault('app.url',
+        project.properties.getOrDefault('app.url', 'http://localhost:8080'))
+    //noinspection GroovyAssignabilityCheck
+    it.outputs.upToDateWhen { false }
+}
+
+task gatlingRun(type: JavaExec) {
+    group = 'verification'
+    description 'Run Gatling Simulation'
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    file("${buildDir}/reports/gatling").mkdirs()
+    main = 'io.gatling.app.Gatling'
+    args = [
+        '-s',
+        'org.bitbucket.yujiorama.sakilaapp.LoadSimulation',
+        '-rf',
+        "${buildDir}/reports/gatling",
+    ]
+    systemProperties(
+        'karate.options': System.properties.getOrDefault('karate.options',
+            project.properties.getOrDefault('karate.options', '--tags ~@ignore')),
+        'karate.env': System.properties.getOrDefault('karate.env',
+            project.properties.getOrDefault('karate.env', 'dev')),
+        'app.url': System.properties.getOrDefault('app.url',
+            project.properties.getOrDefault('app.url', 'http://localhost:8080')),
+    )
 }
