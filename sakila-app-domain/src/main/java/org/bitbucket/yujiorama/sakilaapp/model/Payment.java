@@ -1,6 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.With;
@@ -33,6 +34,7 @@ public class Payment implements Serializable {
 
     @Column(name = "payment_date", nullable = false)
     @JsonProperty("payment_date")
+    @JsonSchemaFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
     private LocalDateTime paymentDate;
 
     @OneToOne(

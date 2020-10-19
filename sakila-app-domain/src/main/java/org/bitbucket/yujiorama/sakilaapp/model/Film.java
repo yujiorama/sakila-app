@@ -1,6 +1,7 @@
 package org.bitbucket.yujiorama.sakilaapp.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,6 +50,7 @@ public class Film implements Serializable {
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
+    @JsonSchemaFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
     private LocalDateTime lastUpdate;
 
     @OneToOne(
