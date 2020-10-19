@@ -1,4 +1,3 @@
-@ignore
 Feature: language
 
   Background:
@@ -28,6 +27,20 @@ Feature: language
     Then status 200
     And assert SchemaUtils.isValid(response, schema.language)
     And match response contains { language_id: 2 }
+    * def languageId = response.language_id
+
+    Given path languageId
+    When method delete
+    Then status 204
+
+  @delete
+  Scenario: delete(created)
+    Given def language = { name: 'まるまる' }
+    And request language
+    When method post
+    Then status 200
+    And assert SchemaUtils.isValid(response, schema.language)
+    And match response contains { name: 'まるまる' }
     * def languageId = response.language_id
 
     Given path languageId
