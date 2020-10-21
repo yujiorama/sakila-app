@@ -17,9 +17,11 @@ services:
       - /var/lib/postgresql/data
   webapp:
     image: example.com/sakila-app-web:0.0.1-SNAPSHOT
-    #    build:
-    #      context: ../
-    #      dockerfile: testing/Dockerfile
+    build:
+      context: ../
+      dockerfile: testing/Dockerfile.webapp
+      args:
+        JAR_FILE: sakila-app-web/build/libs/sakila-app-web*.jar
     networks:
       - internal
     depends_on:
@@ -34,7 +36,20 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SERVER_PORT: ${WEBAPP_PORT}
       BPL_SPRING_CLOUD_BINDINGS_ENABLED: "false"
-      JAVA_OPTS: "-XX:+FlightRecorder -XX:StartFlightRecording=duration=10s,filename=/home/cnb/sakila-app.jfr"
+      JAVA_OPTS: "-XX:MaxDirectMemorySize=10M -Xmx411593K -XX:MaxMetaspaceSize=124982K -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx411593K
+                  -Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,filename=/application/sakila-app.jfr"
+      #JAVA_OPTS: "-Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,filename=/home/cnb/sakila-app.jfr"
+    volumes:
+      - webapp-data:/tmp
+  # FIXME https://bugs.openjdk.java.net/browse/JDK-8228343
+  #jdkhelper:
+  #  image: adoptopenjdk/openjdk11:alpine
+  #  pid: "service:webapp"
+  #  entrypoint: tail -f /dev/null
+  #  depends_on:
+  #    - webapp
+  #  volumes:
+  #    - webapp-data:/tmp
   migration:
     build:
       context: ../
@@ -74,3 +89,6 @@ services:
 
 networks:
   internal:
+
+volumes:
+  webapp-data:

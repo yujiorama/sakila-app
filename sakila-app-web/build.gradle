@@ -10,6 +10,14 @@ sourceSets.integrationTest {
     }
 }
 
+//noinspection GroovyAssignabilityCheck
+configurations.all {
+    // FIXME https://github.com/gradle/gradle/issues/6750#issuecomment-423019485
+    if (it.name.startsWith('incrementalScalaAnalysis')) {
+        extendsFrom = []
+    }
+}
+
 ext {
     karateVersion = '0.9.6'
     jsonSchemaValidatorVersion = '2.2.6'
@@ -35,6 +43,14 @@ flyway {
         'DB_PASSWORD': System.properties.getOrDefault('flyway.password',
             project.properties.getOrDefault('flyway.password', 'sakila')),
     ]
+}
+
+// fat jar - ./gradlew sakila-app-web:bootJar
+// layered jar - ./gradlew sakila-app-web:bootJar -DbootJar.layered.enabled
+if (System.properties.containsKey('bootJar.layered.enabled') || project.hasProperty('bootJar.layered.enabled')) {
+    bootJar {
+        layered()
+    }
 }
 
 bootBuildImage {

@@ -1,0 +1,32 @@
+FROM adoptopenjdk/openjdk11:alpine as builder
+
+WORKDIR application
+ARG JAR_FILE=sakila-app-web/build/libs/*.jar
+COPY ${JAR_FILE} application.jar
+RUN set -x \
+ && java -Djarmode=layertools -jar application.jar extract \
+ && ls -l
+
+
+FROM adoptopenjdk/openjdk11:alpine
+
+RUN set -x \
+ && adduser -h application -s /sbin/nologin -D nonroot users \
+ && apk add tzdata \
+ && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+ && echo "Asia/Tokyo" > /etc/timezone \
+ && apk del tzdata \
+ && rm -rf /var/cache/apk/*
+
+USER nonroot
+WORKDIR application
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/application/ ./
+
+ENV PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    LANG=ja_JP.UTF-8 \
+    LC_ALL=ja_JP.UTF-8
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["java $JAVA_OPTS org.springframework.boot.loader.JarLauncher"]
