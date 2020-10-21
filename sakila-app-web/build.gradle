@@ -10,7 +10,10 @@ sourceSets.integrationTest {
     }
 }
 
-ext['karateVersion'] = '0.9.6'
+ext {
+    karateVersion = '0.9.6'
+    jsonSchemaValidatorVersion = '2.2.6'
+}
 
 dependencies {
     implementation(project(':sakila-app-domain'))
@@ -19,9 +22,8 @@ dependencies {
     testImplementation("com.intuit.karate:karate-junit5:${karateVersion}")
     testImplementation("com.intuit.karate:karate-apache:${karateVersion}")
     testImplementation("com.intuit.karate:karate-gatling:${karateVersion}")
-    testImplementation('com.kjetland:mbknor-jackson-jsonschema_2.12:1.0.39')
-    testImplementation('com.github.fge:json-schema-validator:2.2.6')
-    testImplementation('org.scala-lang:scala-library:2.12.3')
+    testImplementation("com.github.fge:json-schema-validator:${jsonSchemaValidatorVersion}")
+    testImplementation("org.scala-lang:scala-library:${scalaVersion.major}.${scalaVersion.minor}.${scalaVersion.patch}")
 }
 
 flyway {
