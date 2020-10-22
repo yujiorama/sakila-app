@@ -5,6 +5,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.With;
+import org.bitbucket.yujiorama.sakilaapp.DateTimePattern;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
@@ -32,7 +33,7 @@ public class FilmCategory implements Serializable {
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
-    @JsonSchemaFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
+    @JsonSchemaFormat(DateTimePattern.ENTITY_DATETIME_PATTERN)
     private LocalDateTime lastUpdate;
 
     @Id

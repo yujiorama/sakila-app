@@ -32,8 +32,9 @@ class ControllerTestConfig {
 
         return Jackson2ObjectMapperBuilderCustomizer { builder ->
             run {
-                builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ISO_DATE_TIME))
-                builder.deserializers(LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME))
+                val dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                builder.serializers(LocalDateTimeSerializer(dateTimeFormatter))
+                builder.deserializers(LocalDateTimeDeserializer(dateTimeFormatter))
             }
         }
     }

@@ -5,6 +5,7 @@ import com.kjetland.jackson.jsonSchema.annotations.JsonSchemaFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.With;
+import org.bitbucket.yujiorama.sakilaapp.DateTimePattern;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class Payment implements Serializable {
 
     @Column(name = "payment_date", nullable = false)
     @JsonProperty("payment_date")
-    @JsonSchemaFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
+    @JsonSchemaFormat(DateTimePattern.ENTITY_DATETIME_PATTERN)
     private LocalDateTime paymentDate;
 
     @OneToOne(

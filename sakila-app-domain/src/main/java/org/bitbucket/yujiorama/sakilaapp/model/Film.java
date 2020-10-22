@@ -6,6 +6,7 @@ import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.With;
+import org.bitbucket.yujiorama.sakilaapp.DateTimePattern;
 import org.bitbucket.yujiorama.sakilaapp.impl.RatingEnumType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -50,7 +51,7 @@ public class Film implements Serializable {
 
     @Column(name = "last_update", nullable = false)
     @JsonProperty("last_update")
-    @JsonSchemaFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")
+    @JsonSchemaFormat(DateTimePattern.ENTITY_DATETIME_PATTERN)
     private LocalDateTime lastUpdate;
 
     @OneToOne(
