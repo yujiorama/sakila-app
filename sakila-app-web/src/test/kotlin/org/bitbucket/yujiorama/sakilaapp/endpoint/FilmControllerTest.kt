@@ -27,39 +27,43 @@ class FilmControllerTest(
         @Autowired private val objectMapper: ObjectMapper
 ) {
 
+    private val fixture = mapOf(
+        111 to Film().withId(111).withTitle("aaa").withDescription("aaa").withLanguage(Language().withId(111).withName("ja")).withRating(Rating.G).withLength(120),
+        222 to Film().withId(222).withTitle("bbb").withDescription("bbb").withLanguage(Language().withId(222).withName("en")).withRating(Rating.NC_17).withLength(120),
+        333 to Film().withId(333).withTitle("ccc").withDescription("ccc").withLanguage(Language().withId(333).withName("fr")).withRating(Rating.PG).withLength(120),
+        444 to Film().withId(444).withTitle("ddd").withDescription("ddd").withLanguage(Language().withId(444).withName("it")).withRating(Rating.PG_13).withLength(120),
+        555 to Film().withId(555).withTitle("eee").withDescription("eee").withLanguage(Language().withId(555).withName("ru")).withRating(Rating.R).withLength(120),
+        1374 to Film().withId(1374).withTitle("abcde").withDescription("abcde").withLanguage(Language().withId(1374).withName("ja")).withRating(Rating.G).withLength(120),
+    )
+
     @Test
     fun `all request`() {
         given(repository.findAllByOrderByTitleAsc())
-                .willReturn(listOf(
-                        Film(id = 111, title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.G, length = 120),
-                        Film(id = 222, title = "bbb", description = "bbb", language = Language(id = 222, name = "en"), rating = Rating.NC_17, length = 120),
-                        Film(id = 333, title = "ccc", description = "ccc", language = Language(id = 333, name = "fr"), rating = Rating.PG, length = 120),
-                        Film(id = 444, title = "ddd", description = "ddd", language = Language(id = 444, name = "it"), rating = Rating.PG_13, length = 120),
-                        Film(id = 555, title = "eee", description = "eee", language = Language(id = 555, name = "ru"), rating = Rating.R, length = 120)
-                ))
+            .willReturn(ArrayList(fixture.values).sortedBy { it.id }.take(5))
 
         mockMvc.perform(get("/films")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$[0].id").value(111))
-                .andExpect(jsonPath("$[1].id").value(222))
-                .andExpect(jsonPath("$[2].id").value(333))
-                .andExpect(jsonPath("$[3].id").value(444))
-                .andExpect(jsonPath("$[4].id").value(555))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].film_id").value(111))
+            .andExpect(jsonPath("$[1].film_id").value(222))
+            .andExpect(jsonPath("$[2].film_id").value(333))
+            .andExpect(jsonPath("$[3].film_id").value(444))
+            .andExpect(jsonPath("$[4].film_id").value(555))
     }
 
     @Test
     fun `read request`() {
-        given(repository.findById(1374))
-                .willReturn(Optional.of(Film(id = 1374, title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.G, length = 120)))
+        val expected = fixture.getValue(1374)
+        given(repository.findById(expected.id))
+            .willReturn(Optional.of(expected))
 
         mockMvc.perform(get("/films/1374")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.id").value(1374))
-                .andExpect(jsonPath("$.title").value("aaa"))
-                .andExpect(jsonPath("$.language.name").value("ja"))
-                .andExpect(jsonPath("$.rating").value("G"))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.film_id").value(expected.id))
+            .andExpect(jsonPath("$.title").value(expected.title))
+            .andExpect(jsonPath("$.language.name").value(expected.language.name))
+            .andExpect(jsonPath("$.rating").value(expected.rating.label))
     }
 
     @Test
@@ -76,32 +80,33 @@ class FilmControllerTest(
 
     @Test
     fun `create request`() {
-        val requestFilm = Film(title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.PG_13, length = 120)
-        val savedFilm = requestFilm.copy(id = 1374, title = "saved")
+        val requestFilm = fixture.getValue(111)
+        val savedFilm = requestFilm.withId(1374).withTitle("saved")
 
         given(repository.save(any(Film::class.java)))
-                .willReturn(savedFilm)
+            .willReturn(savedFilm)
 
         mockMvc.perform(post("/films")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(requestFilm)))
-                .andExpect(status().is2xxSuccessful)
-                .andExpect(jsonPath("$.title").value(savedFilm.title))
-                .andExpect(jsonPath("$.rating").value(savedFilm.rating?.serialize()!!))
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(requestFilm)))
+            .andExpect(status().is2xxSuccessful)
+            .andExpect(jsonPath("$.title").value(savedFilm.title))
+            .andExpect(jsonPath("$.rating").value(savedFilm.rating.label))
     }
 
     @Test
     fun `update request`() {
-        given(repository.findById(1374))
-                .willReturn(Optional.of(Film(id = 1374, title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.G, length = 120)))
+        val expected = fixture.getValue(1374)
+        given(repository.findById(expected.id))
+            .willReturn(Optional.of(expected))
         given(repository.save(any(Film::class.java)))
-                .willReturn(Film(id = 1374, title = "aaa", description = "aaa", language = Language(id = 111, name = "ja"), rating = Rating.PG_13, length = 120))
+            .willReturn(expected.withRating(Rating.PG_13))
 
         mockMvc.perform(put("/films/1374")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
                     {
                         "id":1374,
                         "title":"aaa",
@@ -114,8 +119,8 @@ class FilmControllerTest(
                         "length": 120
                     }
                 """.trimIndent().trimMargin()))
-                .andExpect(status().is2xxSuccessful)
-                .andExpect(jsonPath("$.id").value(1374))
-                .andExpect(jsonPath("$.rating").value("PG-13"))
+            .andExpect(status().is2xxSuccessful)
+            .andExpect(jsonPath("$.film_id").value(expected.id))
+            .andExpect(jsonPath("$.rating").value("PG-13"))
     }
 }
