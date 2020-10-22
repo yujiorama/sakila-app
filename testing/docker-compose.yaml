@@ -37,8 +37,8 @@ services:
       SERVER_PORT: ${WEBAPP_PORT}
       BPL_SPRING_CLOUD_BINDINGS_ENABLED: "false"
       JAVA_OPTS: "-XX:MaxDirectMemorySize=10M -Xmx411593K -XX:MaxMetaspaceSize=124982K -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx411593K
-                  -Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,filename=/application/sakila-app.jfr"
-      #JAVA_OPTS: "-Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,filename=/home/cnb/sakila-app.jfr"
+                  -Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s"
+      #JAVA_OPTS: "-Dhibernate.types.print.banner=false -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s"
     volumes:
       - webapp-data:/tmp
   # FIXME https://bugs.openjdk.java.net/browse/JDK-8228343
