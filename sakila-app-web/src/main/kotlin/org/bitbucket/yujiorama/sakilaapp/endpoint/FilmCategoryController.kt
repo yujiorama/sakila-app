@@ -25,7 +25,7 @@ class FilmCategoryController(
     }
 
     @GetMapping("/filmcategories")
-    fun readAll(): List<FilmCategory> = repository.findAllByOrderByFilmIdAscCategoryAsc()
+    fun readAll(): List<FilmCategory> = repository.findAllByOrderByIdAscCategoryAsc()
 
     @PostMapping("/filmcategories")
     fun create(@RequestBody aFilmCategory: FilmCategory): FilmCategory = repository.save(aFilmCategory)

@@ -80,6 +80,16 @@ class InternalTest(
     }
 
     @Test
+    fun `create Actor(Cindy Roper)`() {
+        val res = restTemplate.postForEntity("/actors", Actor().withFirstName("Cindy").withLastName("Roper"), Actor::class.java)
+        val actor = res.body!!
+        Assertions.assertTrue(actor.id!! > 0, "actor.id")
+        Assertions.assertNotNull(actor.lastUpdate, "actor.id")
+        Assertions.assertEquals("cindy", actor.firstName.toLowerCase())
+        Assertions.assertEquals("roper", actor.lastName.toLowerCase())
+    }
+
+    @Test
     fun `create Language(Spanish)`() {
         val res = restTemplate.postForEntity<Language>("/languages", Language().withName("Spanish"), Language::class.java)
         Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
@@ -132,7 +142,7 @@ class InternalTest(
         Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
         val staff = res.body!!
         Assertions.assertEquals(1, staff.id)
-        Assertions.assertEquals(pictureBytes.toList(), staff.picture.toList())
+        Assertions.assertEquals(pictureBytes.toList(), staff.picture?.toList())
     }
 
     @Test

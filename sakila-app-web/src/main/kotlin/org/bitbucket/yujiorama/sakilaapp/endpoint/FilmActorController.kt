@@ -25,7 +25,7 @@ class FilmActorController(
     }
 
     @GetMapping("/filmactors")
-    fun readAll(): List<FilmActor> = repository.findAllByOrderByActorIdAscFilmAsc()
+    fun readAll(): List<FilmActor> = repository.findAllByOrderByIdAscFilmAsc()
 
     @PostMapping("/filmactors")
     fun create(@RequestBody aFilmActor: FilmActor): FilmActor = repository.save(aFilmActor)

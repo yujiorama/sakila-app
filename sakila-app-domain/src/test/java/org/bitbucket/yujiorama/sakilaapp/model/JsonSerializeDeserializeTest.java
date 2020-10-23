@@ -53,7 +53,7 @@ public class JsonSerializeDeserializeTest {
         final var address = new Address(1L, lastUpdate, "address", "address2", city, "101", "010", null);
         final var store = new Store(1, lastUpdate, address, null);
         final var staff = new Staff(1, lastUpdate, "aaa", "bbb", address, "aaa@example.com", store, false, "aaa", "bbb", null);
-        store.setManagerStaff(staff);
+        store.withManagerStaff(staff);
         final var serialized = this.objectMapper.writeValueAsString(staff);
         Assertions.assertTrue(serialized.length() > 0, "serialized");
         Assertions.assertNotEquals("{}", serialized);
@@ -134,6 +134,29 @@ public class JsonSerializeDeserializeTest {
             "        \"phone\": \"010\"\n" +
             "      },\n" +
             "      \"email\": \"aaa@example.com\",\n" +
+            "      \"store\": {\n" +
+            "        \"store_id\": 1,\n" +
+            "        \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "        \"address\": {\n" +
+            "          \"address_id\": 1,\n" +
+            "          \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "          \"address\": \"address\",\n" +
+            "          \"address2\": \"address2\",\n" +
+            "          \"district\": \"distinct\",\n" +
+            "          \"city\": {\n" +
+            "            \"city_id\": 1,\n" +
+            "            \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "            \"city\": \"city\",\n" +
+            "            \"country\": {\n" +
+            "              \"country_id\": 1,\n" +
+            "              \"last_update\": \"2020-10-13T09:14:17.8159717\",\n" +
+            "              \"country\": \"country\"\n" +
+            "            }\n" +
+            "          },\n" +
+            "          \"postal_code\": \"101\",\n" +
+            "          \"phone\": \"010\"\n" +
+            "        }\n" +
+            "      },\n" +
             "      \"active\": false,\n" +
             "      \"username\": \"aaa\",\n" +
             "      \"password\": \"bbb\",\n" +

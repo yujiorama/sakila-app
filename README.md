@@ -31,6 +31,14 @@
 * [x] `enum class` のためのマッパーを構成する
 * [x] `ByteArray` のためのマッパーを構成する
 
+## 利用するフレームワーク
+
+Spring Data JDBC
+
+[x] `feature/data-jdbc` で実装
+[ ] `InternalTest` を通過 ( NG - 複合主キーに未対応)
+[ ] `ExternalTest` を通過
+
 ## ライセンス
 
 [MIT](./LICENSE)

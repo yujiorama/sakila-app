@@ -36,9 +36,9 @@ class StaffController(
 
         return repository.findById(id.toInt()).map {
             val newStaffEntity = aStaff
-                    .withId(id.toInt())
-                    .withLastUpdate(LocalDateTime.now())
-                    .withStore(storeRepository.findById(aStaff.store.id).get())
+                .withId(id.toInt())
+                .withLastUpdate(LocalDateTime.now())
+                .withStore(storeRepository.findById(aStaff.store.id!!).get())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newStaffEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
