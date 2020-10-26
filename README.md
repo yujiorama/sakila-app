@@ -31,6 +31,14 @@
 * [x] `enum class` のためのマッパーを構成する
 * [x] `ByteArray` のためのマッパーを構成する
 
+## 利用するフレームワーク
+
+Spring Data JPA
+
+* [x] `feature/data-jpa` で実装
+* [x] `InternalTest` を通過
+* [x] `ExternalTest` を通過
+
 ## ライセンス
 
 [MIT](./LICENSE)
