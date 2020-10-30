@@ -1,10 +1,16 @@
 package org.bitbucket.yujiorama.sakilaapp
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.bitbucket.yujiorama.sakilaapp.model.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -15,14 +21,29 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.util.LinkedMultiValueMap
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
-    initializers = [TestDatabaseInitializer::class]
+    initializers = [TestDatabaseInitializer::class],
 )
 class InternalTest(
-    @Autowired private val restTemplate: TestRestTemplate
+    @Autowired private val restTemplate: TestRestTemplate,
 ) {
+
+    private val objectMapper = ObjectMapper()
+        .registerKotlinModule()
+        .registerModule(
+            SimpleModule()
+                .addSerializer(
+                    LocalDateTime::class.java,
+                    LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                ).addDeserializer(
+                    LocalDateTime::class.java,
+                    LocalDateTimeDeserializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                )
+        )
 
     @BeforeAll
     fun setup() {
@@ -112,12 +133,40 @@ class InternalTest(
     }
 
     @Test
-    fun `read and write Staff picture`() {
+    fun `update Customer(first,last)`() {
+        try {
+            val res = restTemplate.getForEntity<Customer>("/customers/3")
+            Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
+            val customer = res.body!!
+            val request = customer.withFirstName("first").withLastName("last").let {
+                val headers = LinkedMultiValueMap<String, String>()
+                headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
+                HttpEntity(it, headers)
+            }
+            restTemplate.put("/customers/${customer.id}", request)
+        } catch (e: Exception) {
+            Assertions.fail<Void>(e.message)
+        }
+
+        val res = restTemplate.getForEntity<Customer>("/customers/3")
+        Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
+        val newCustomer = res.body!!
+        Assertions.assertEquals(3, newCustomer.id)
+        Assertions.assertEquals("first", newCustomer.firstName)
+        Assertions.assertEquals("last", newCustomer.lastName)
+    }
+
+    private val logger = LoggerFactory.getLogger(InternalTest::class.java)
+
+    @Test
+    fun `read and modify Staff picture`() {
         val pictureBytes = byteArrayOf(1, 1, 2, 2, 3, 3)
         try {
-            val res = restTemplate.getForEntity<Staff>("/staffs/1")
+            // TODO need appropriate configuration for TestRestTemplate
+            val res = restTemplate.getForEntity<String>("/staffs/1")
             Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
-            val staff = res.body!!
+            logger.debug(res.body)
+            val staff = objectMapper.readValue(res.body, Staff::class.java)
             val request = staff.withPicture(pictureBytes).let {
                 val headers = LinkedMultiValueMap<String, String>()
                 headers.putIfAbsent(HttpHeaders.CONTENT_TYPE, listOf(MediaType.APPLICATION_JSON_VALUE))
@@ -132,7 +181,7 @@ class InternalTest(
         Assertions.assertTrue(res.statusCode.is2xxSuccessful, "statusCode=[${res.statusCode}]")
         val staff = res.body!!
         Assertions.assertEquals(1, staff.id)
-        Assertions.assertEquals(pictureBytes.toList(), staff.picture.toList())
+        Assertions.assertEquals(pictureBytes.toList(), staff.picture?.toList())
     }
 
     @Test
