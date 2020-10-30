@@ -79,6 +79,61 @@ Feature: staff
   @update
   Scenario: update(not found)
     Given path 1374001
-    And request { staff_id: 1374001, address: { address_id: 1374001 }, store: { store_id: 1374001 } }
+    And request
+      """
+      {
+        "staff_id": 1374001,
+        "last_update": "2020-01-02T03:04:05.678",
+        "first_name": "Mike",
+        "last_name": "Hillyer",
+        "email": "Mike.Hillyer@sakilastaff.com",
+        "active": true,
+        "username": "Mike",
+        "password": "8cb2237d0679ca88db6464eac60da96345513964",
+        "picture": null,
+        "address": {
+          "address_id": 1374001,
+          "last_update": "2020-01-02T03:04:05.678",
+          "address": "ころころ",
+          "district": "ひそひそ",
+          "city": {
+            "city_id": 1374001,
+            "last_update": "2020-01-02T03:04:05.678",
+            "city": "Lethbridge",
+            "country": {
+              "country_id": 1374001,
+              "last_update": "2020-01-02T03:04:05.678",
+              "country": "Canada"
+            }
+          },
+          "phone": " ",
+          "address2": null,
+          "postal_code": null
+        },
+        "store": {
+          "store_id": 1374001,
+          "last_update": "2020-01-02T03:04:05.678",
+          "address": {
+            "address_id": 1374001,
+            "last_update": "2020-01-02T03:04:05.678",
+            "address": "47 MySakila Drive",
+            "district": " ",
+            "city": {
+              "city_id": 1374001,
+              "last_update": "2020-01-02T03:04:05.678",
+              "city": "Lethbridge",
+              "country": {
+                "country_id": 1374001,
+                "last_update": "2020-01-02T03:04:05.678",
+                "country": "Canada"
+              }
+            },
+            "phone": " ",
+            "address2": null,
+            "postal_code": null
+          }
+        }
+      }
+      """
     When method put
     Then status 404
