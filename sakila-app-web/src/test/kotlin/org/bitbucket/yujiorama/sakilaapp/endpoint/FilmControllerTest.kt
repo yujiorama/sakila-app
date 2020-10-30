@@ -54,13 +54,13 @@ class FilmControllerTest(
     @Test
     fun `read request`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
 
         mockMvc.perform(get("/films/1374")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.film_id").value(expected.id))
+            .andExpect(jsonPath("$.film_id").value(expected.id!!))
             .andExpect(jsonPath("$.title").value(expected.title))
             .andExpect(jsonPath("$.language.name").value(expected.language.name))
             .andExpect(jsonPath("$.rating").value(expected.rating.label))
@@ -98,7 +98,7 @@ class FilmControllerTest(
     @Test
     fun `update request`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
         given(repository.save(any(Film::class.java)))
             .willReturn(expected.withRating(Rating.PG_13))
@@ -120,7 +120,7 @@ class FilmControllerTest(
                     }
                 """.trimIndent().trimMargin()))
             .andExpect(status().is2xxSuccessful)
-            .andExpect(jsonPath("$.film_id").value(expected.id))
+            .andExpect(jsonPath("$.film_id").value(expected.id!!))
             .andExpect(jsonPath("$.rating").value("PG-13"))
     }
 }

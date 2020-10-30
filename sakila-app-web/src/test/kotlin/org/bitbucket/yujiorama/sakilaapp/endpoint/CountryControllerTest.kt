@@ -46,20 +46,20 @@ class CountryControllerTest(
     @Test
     fun `read request`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
 
         mockMvc.perform(get("/countries/1374")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.country_id").value(expected.id))
+            .andExpect(jsonPath("$.country_id").value(expected.id!!))
             .andExpect(jsonPath("$.country").value(expected.country))
     }
 
     @Test
     fun `read request(missing)`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
 
         mockMvc.perform(get("/countries/1111")
@@ -70,7 +70,7 @@ class CountryControllerTest(
     @Test
     fun `update request`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
         val lastUpdate = LocalDateTime.of(2020, 1, 2, 3, 45, 6)
         given(repository.save(any(Country::class.java)))
@@ -87,7 +87,7 @@ class CountryControllerTest(
     @Test
     fun `update request(missing)`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
         val lastUpdate = LocalDateTime.of(2020, 1, 2, 3, 45, 6)
         given(repository.save(any(Country::class.java)))
@@ -103,7 +103,7 @@ class CountryControllerTest(
     @Test
     fun `delete request`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
 
         mockMvc.perform(delete("/countries/1374")
@@ -114,7 +114,7 @@ class CountryControllerTest(
     @Test
     fun `delete request(missing)`() {
         val expected = fixture.getValue(1374)
-        given(repository.findById(expected.id))
+        given(repository.findById(expected.id!!))
             .willReturn(Optional.of(expected))
 
         mockMvc.perform(get("/countries/1111")
