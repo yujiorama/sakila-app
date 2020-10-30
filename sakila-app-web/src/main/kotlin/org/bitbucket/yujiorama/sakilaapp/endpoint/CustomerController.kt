@@ -2,6 +2,7 @@ package org.bitbucket.yujiorama.sakilaapp.endpoint
 
 import org.bitbucket.yujiorama.sakilaapp.model.Customer
 import org.bitbucket.yujiorama.sakilaapp.model.CustomerRepository
+import org.bitbucket.yujiorama.sakilaapp.model.StoreRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class CustomerController(
-        @Autowired private val repository: CustomerRepository
+    @Autowired private val repository: CustomerRepository,
+    @Autowired private val storeRepository: StoreRepository,
 ) {
 
     @GetMapping("/customers/{id}")
@@ -34,8 +36,9 @@ class CustomerController(
 
         return repository.findById(id.toInt()).map {
             val newCustomerEntity = aCustomer
-                    .withId(id.toInt())
-                    .withLastUpdate(LocalDateTime.now())
+                .withId(id.toInt())
+                .withLastUpdate(LocalDateTime.now())
+                .withStore(storeRepository.findById(aCustomer.store.id!!).get())
             ResponseEntity.status(HttpStatus.CREATED).body(repository.save(newCustomerEntity))
         }.orElse(ResponseEntity.notFound().build())
     }
