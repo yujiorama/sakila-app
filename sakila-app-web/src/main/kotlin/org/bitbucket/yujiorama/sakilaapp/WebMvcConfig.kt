@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Configuration
-class WebMfcConfig : WebMvcConfigurer {
+class WebMvcConfig : WebMvcConfigurer {
 
     @Bean
     fun jacksonCustomizer(): Jackson2ObjectMapperBuilderCustomizer {
