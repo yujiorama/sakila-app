@@ -1,4 +1,4 @@
-package org.bitbucket.yujiorama.sakilaapp.batch
+package org.bitbucket.yujiorama.sakilaapp
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

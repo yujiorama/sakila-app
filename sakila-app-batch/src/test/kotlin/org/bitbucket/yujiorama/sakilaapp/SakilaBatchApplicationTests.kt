@@ -1,4 +1,4 @@
-package org.bitbucket.yujiorama.sakilaapp.batch
+package org.bitbucket.yujiorama.sakilaapp
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

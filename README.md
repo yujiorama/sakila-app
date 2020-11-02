@@ -21,8 +21,8 @@
 
 ## sakila-app-batch
 
-* [ ] ジョブを定義する
-* [ ] logging を構成する
+* [x] ジョブを定義する
+* [x] logging を構成する
 
 ## sakila-app-domain
 
